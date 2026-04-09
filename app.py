@@ -1946,12 +1946,12 @@ with col_chat:
                     st.rerun()
     
     # 常に画面下部に固定される公式チャット入力コンポーネントに変更 #20260410
-    if prompt := st.chat_input("メッセージを入力してください..."):
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        st.session_state.button_options = []
-        st.session_state.pending_input_display = ""
-        st.session_state.pending_ai_request = prompt
-        st.rerun()
+    if prompt := st.chat_input("メッセージを入力してください..."):  #20260410 入力欄を最下部に固定
+        st.session_state.messages.append({"role": "user", "content": prompt})  #20260410 ユーザーメッセージを追加
+        st.session_state.button_options = []  #20260410 選択肢をクリア
+        st.session_state.pending_input_display = ""  #20260410 古い入力表示をクリア
+        st.session_state.pending_ai_request = prompt  #20260410 AIリクエストのフラグを立てる
+        st.rerun()  #20260410 画面を再描画してメッセージを即反映
 
     # ==============================================================================
     # 遅延実行されるAIリクエストの処理 #20260410
