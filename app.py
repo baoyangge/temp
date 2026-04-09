@@ -1945,29 +1945,13 @@ with col_chat:
                     
                     st.rerun()
     
-    col_input, col_btn = st.columns([6, 1])
-    
-    with col_input:
-        # 入力欄に表示する値を決定 #20240409
-        display_value = st.session_state.pending_input_display  #20240409
-        
-        prompt = st.text_input(
-            "メッセージを入力",
-            value=display_value,  #20240409 選択した内容を表示
-            key="chat_input_field",
-            label_visibility="collapsed",
-            placeholder="メッセージを入力してください..."
-        )
-    
-    with col_btn:
-        send_clicked = st.button("送信", type="primary", use_container_width=True)
-    
-    if send_clicked and prompt.strip():  #20260410 空送信を防ぐ
+    # 常に画面下部に固定される公式チャット入力コンポーネントに変更 #20260410
+    if prompt := st.chat_input("メッセージを入力してください..."):
         st.session_state.messages.append({"role": "user", "content": prompt})
         st.session_state.button_options = []
-        st.session_state.pending_input_display = ""  #20240409 送信後は入力欄をクリア
-        st.session_state.pending_ai_request = prompt  #20260410 AIリクエストのフラグを立てる
-        st.rerun()  #20260410 ユーザーメッセージを画面に即反映させるためにリラン
+        st.session_state.pending_input_display = ""
+        st.session_state.pending_ai_request = prompt
+        st.rerun()
 
     # ==============================================================================
     # 遅延実行されるAIリクエストの処理 #20260410
