@@ -1,9 +1,10 @@
-import streamlit as st
+​import streamlit as st
 import pandas as pd
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 import plotly.graph_objects as go
 import re
+from datetime import datetime, date  #20240409
 
 from modules.utils import read_yaml
 from modules.get_persona_info import get_persona_info
@@ -67,6 +68,39 @@ PLAN_TYPE_TO_NAME = {
     PlanType.TAKE: "竹プラン",
     PlanType.UME: "梅プラン",
 }
+
+
+# ==============================================================================
+# 年齢計算関数
+# ==============================================================================
+
+def calculate_age(birth_date) -> int:  #20240409
+    """生年月日から年齢を計算"""  #20240409
+    if pd.isna(birth_date):  #20240409
+        return 0  #20240409
+    
+    if isinstance(birth_date, pd.Timestamp):  #20240409
+        birth_date = birth_date.date()  #20240409
+    elif isinstance(birth_date, datetime):  #20240409
+        birth_date = birth_date.date()  #20240409
+    elif isinstance(birth_date, str):  #20240409
+        try:  #20240409
+            birth_date = datetime.strptime(birth_date, '%Y-%m-%d').date()  #20240409
+        except:  #20240409
+            try:  #20240409
+                birth_date = datetime.strptime(birth_date, '%Y年%m月%d日').date()  #20240409
+            except:  #20240409
+                return 0  #20240409
+    elif not isinstance(birth_date, date):  #20240409
+        return 0  #20240409
+    
+    today = date.today()  #20240409
+    age = today.year - birth_date.year  #20240409
+    
+    if (today.month, today.day) < (birth_date.month, birth_date.day):  #20240409
+        age -= 1  #20240409
+    
+    return age  #20240409
 
 
 # ==============================================================================
@@ -202,6 +236,10 @@ def initialize_session_state() -> None:
     if "radar_visible_categories" not in st.session_state:
         st.session_state.radar_visible_categories = None
 
+    # 選択肢から選択された内容を表示するための変数 #20240409
+    if "pending_input_display" not in st.session_state:  #20240409
+        st.session_state.pending_input_display = ""  #20240409
+
 
 def reset_conversation_state() -> None:
     st.session_state.messages = []
@@ -227,6 +265,7 @@ def reset_conversation_state() -> None:
     st.session_state.response_answers = []
     # レーダーチャート表示項目もリセット
     st.session_state.radar_visible_categories = None
+    st.session_state.pending_input_display = ""  #20240409
 
 
 # ==============================================================================
@@ -427,18 +466,18 @@ def create_coverage_radar_chart(plan_name: str) -> go.Figure:
                 range=[0, 100],
                 tickvals=[0, 25, 50, 75, 100],
                 ticktext=["0%", "25%", "50%", "75%", "100%"],
-                tickfont=dict(size=9, color="#666666"),
+                tickfont=dict(size=11, color="#666666"),  #20240409 9から11に変更
                 gridcolor="#e9ecef",
             ),
             angularaxis=dict(
-                tickfont=dict(size=10, color="#333333"),
+                tickfont=dict(size=13, color="#333333", family="Arial Black"),  #20240409 10から13に変更、フォントを太字に
                 gridcolor="#e9ecef",
             ),
             bgcolor="#ffffff",
         ),
         showlegend=False,
-        height=280,
-        margin=dict(l=50, r=50, t=30, b=30),
+        height=320,  #20240409 280から320に変更（文字が大きくなった分、高さも調整）
+        margin=dict(l=60, r=60, t=40, b=40),  #20240409 マージンを調整
         paper_bgcolor="#ffffff",
         plot_bgcolor="#ffffff",
     )
@@ -903,6 +942,9 @@ if pd.notna(birth_date):
 else:
     birth_date_str = "未設定"
 
+# 年齢を計算 #20240409
+age = calculate_age(birth_date)  #20240409
+
 
 # ===========================================
 # サイドバー
@@ -918,7 +960,15 @@ with st.sidebar:
     for idx, name in enumerate(persona_names):
         button_type = "primary" if idx == st.session_state.selected_persona_idx else "secondary"
         
-        if st.button(f"{name}", key=f"persona_{idx}", use_container_width=True, type=button_type):
+        # 各ペルソナの性別と年齢を取得 #20240409
+        p_persona_no = persona_indices[idx]  #20240409
+        p_row = persona_data.loc[p_persona_no]  #20240409
+        p_gender = p_row.iloc[2]  #20240409
+        p_birth_date = p_row.iloc[4]  #20240409
+        p_age = calculate_age(p_birth_date)  #20240409
+        button_text = f"{name}・{p_gender}・{p_age}才"  #20240409
+        
+        if st.button(button_text, key=f"persona_{idx}", use_container_width=True, type=button_type):  #20240409
             if idx != st.session_state.selected_persona_idx:
                 change_persona(idx, persona_data)
                 st.rerun()
@@ -927,20 +977,20 @@ with st.sidebar:
     
     st.markdown(f"""
     <div class="info-card"><table>
-    <tr><td class="label">想定顧客区分</td><td class="value">{customer_category}</td></tr>
     <tr><td class="label">契約者名</td><td class="value">{contractor_name}</td></tr>
     <tr><td class="label">性別</td><td class="value">{gender}</td></tr>
-    <tr><td class="label">生年月日</td><td class="value">{birth_date_str}</td></tr>
+    <tr><td class="label">生年月日</td><td class="value">{birth_date_str}({age}才)</td></tr>
     <tr><td class="label">配偶者</td><td class="value">{spouse_display}</td></tr>
     <tr><td class="label">子供人数</td><td class="value">{num_children_int}人</td></tr>
     <tr class="highlight-row"><td class="label">家族人数（計）</td><td class="value highlight-value">{family_count}人</td></tr>
     </table></div>
-    """, unsafe_allow_html=True)
+    """, unsafe_allow_html=True)  #20240409
     st.divider()
     
     if st.button("📝 ドラフトプラン作成", key="create_draft_plan_btn", use_container_width=True, type="primary"):
         st.session_state.messages.append({"role": "user", "content": ""})
         st.session_state.button_options = []
+        st.session_state.pending_input_display = ""  #20240409 ドラフトプラン作成時は入力欄をクリア
         
         with st.spinner("ドラフトプラン作成中..."):
             try:
@@ -1038,7 +1088,7 @@ with col_right:
 
 with col_chat:
     st.title("AI チャットアシスタント")
-    st.caption(f"現在のペルソナ: **{persona_names[selected_idx]}**")
+    st.caption(f"現在のペルソナ: **{persona_names[selected_idx]}**（{gender}-{age}才）")  #20240409 性別と年齢を追加
     
     # スクロールバーなしのチャットコンテナ（heightパラメータを削除）
     chat_container = st.container()
@@ -1060,7 +1110,8 @@ with col_chat:
             for idx, option in enumerate(st.session_state.button_options):
                 if st.button(option, key=f"button_option_{idx}", use_container_width=True):
                     st.session_state.messages.append({"role": "user", "content": option})
-                    st.session_state.button_options = []
+                    st.session_state.button_options = []  #20240409 選択肢を非表示にする
+                    st.session_state.pending_input_display = option  #20240409 選択した内容を入力欄に表示
                     
                     with st.spinner("考え中..."):
                         try:
@@ -1090,6 +1141,7 @@ with col_chat:
             for num, text in option_buttons:
                 if st.button(text, key=f"option_{num}", use_container_width=True):
                     st.session_state.messages.append({"role": "user", "content": text})
+                    st.session_state.pending_input_display = text  #20240409 選択した内容を入力欄に表示
                     
                     with st.spinner("考え中..."):
                         try:
@@ -1112,6 +1164,7 @@ with col_chat:
                 if st.button("🥇 松", key="plan_matsu", use_container_width=True):
                     st.session_state.messages.append({"role": "user", "content": "松プランを選択します"})
                     st.session_state.selected_radar_plan = "松"
+                    st.session_state.pending_input_display = "松プランを選択します"  #20240409 選択した内容を入力欄に表示
                     
                     with st.spinner("People Like You 分析中..."):
                         try:
@@ -1130,6 +1183,7 @@ with col_chat:
                 if st.button("🥈 竹", key="plan_take", use_container_width=True):
                     st.session_state.messages.append({"role": "user", "content": "竹プランを選択します"})
                     st.session_state.selected_radar_plan = "竹"
+                    st.session_state.pending_input_display = "竹プランを選択します"  #20240409 選択した内容を入力欄に表示
                     
                     with st.spinner("People Like You 分析中..."):
                         try:
@@ -1148,6 +1202,7 @@ with col_chat:
                 if st.button("🥉 梅", key="plan_ume", use_container_width=True):
                     st.session_state.messages.append({"role": "user", "content": "梅プランを選択します"})
                     st.session_state.selected_radar_plan = "梅"
+                    st.session_state.pending_input_display = "梅プランを選択します"  #20240409 選択した内容を入力欄に表示
                     
                     with st.spinner("People Like You 分析中..."):
                         try:
@@ -1165,9 +1220,12 @@ with col_chat:
     col_input, col_btn = st.columns([6, 1])
     
     with col_input:
+        # 入力欄に表示する値を決定 #20240409
+        display_value = st.session_state.pending_input_display  #20240409
+        
         prompt = st.text_input(
             "メッセージを入力",
-            value="",
+            value=display_value,  #20240409 選択した内容を表示
             key="chat_input_field",
             label_visibility="collapsed",
             placeholder="メッセージを入力してください..."
@@ -1179,6 +1237,7 @@ with col_chat:
     if send_clicked:
         st.session_state.messages.append({"role": "user", "content": prompt})
         st.session_state.button_options = []
+        st.session_state.pending_input_display = ""  #20240409 送信後は入力欄をクリア
         
         with st.spinner("考え中..."):
             try:
