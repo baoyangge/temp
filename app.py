@@ -22,7 +22,41 @@ from my10_generate_people_like_you_talk import GeneratePeopleLikeYouTalk
 
 
 # ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
+# ==============================================================================
 # 定数・設定ファイルの読み込み
+# ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
 # ==============================================================================
 
 BASE_FOLDER = Path.cwd()
@@ -34,7 +68,41 @@ COVERAGE_CATEGORY_DICT = PARAMETERS["coverage_category_dict"]
 
 
 # ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
+# ==============================================================================
 # プランとCoverageLevelのマッピング
+# ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
 # ==============================================================================
 
 COVERAGE_LEVEL_TO_PLAN = {
@@ -51,7 +119,41 @@ PLAN_TO_COVERAGE_LEVEL = {
 
 
 # ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
+# ==============================================================================
 # 特約保険料表示用の定数
+# ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
 # ==============================================================================
 
 SPECIAL_CONTRACT_CATEGORY_ORDER = [
@@ -71,7 +173,41 @@ PLAN_TYPE_TO_NAME = {
 
 
 # ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
+# ==============================================================================
 # 年齢計算関数
+# ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
 # ==============================================================================
 
 def calculate_age(birth_date) -> int:  #20240409
@@ -104,7 +240,41 @@ def calculate_age(birth_date) -> int:  #20240409
 
 
 # ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
+# ==============================================================================
 # データ読み込み関数（キャッシュ付き）
+# ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
 # ==============================================================================
 
 @st.cache_data
@@ -121,7 +291,41 @@ def load_persona_data() -> pd.DataFrame:
 
 
 # ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
+# ==============================================================================
 # 応答解析関数
+# ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
 # ==============================================================================
 
 def extract_button_options_from_response(response_text: str) -> Tuple[str, List[str]]:
@@ -151,7 +355,41 @@ def extract_button_options_from_response(response_text: str) -> Tuple[str, List[
 
 
 # ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
+# ==============================================================================
 # セッション状態の初期化
+# ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
 # ==============================================================================
 
 def initialize_session_state() -> None:
@@ -240,6 +478,10 @@ def initialize_session_state() -> None:
     if "pending_input_display" not in st.session_state:  #20240409
         st.session_state.pending_input_display = ""  #20240409
 
+    # AIへのリクエストを遅延実行するための状態変数 #20260410
+    if "pending_ai_request" not in st.session_state:  #20260410
+        st.session_state.pending_ai_request = None  #20260410
+
 
 def reset_conversation_state() -> None:
     st.session_state.messages = []
@@ -266,10 +508,45 @@ def reset_conversation_state() -> None:
     # レーダーチャート表示項目もリセット
     st.session_state.radar_visible_categories = None
     st.session_state.pending_input_display = ""  #20240409
+    st.session_state.pending_ai_request = None  #20260410
 
 
 # ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
+# ==============================================================================
 # 松プランの保障額に基づいて表示する項目を決定する関数
+# ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
 # ==============================================================================
 
 def determine_visible_categories() -> Optional[List]:
@@ -301,7 +578,41 @@ def determine_visible_categories() -> Optional[List]:
 
 
 # ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
+# ==============================================================================
 # catalog から保障額を同期する関数
+# ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
 # ==============================================================================
 def sync_coverage_dict_from_catalog() -> None:
     """
@@ -335,7 +646,41 @@ def sync_coverage_dict_from_catalog() -> None:
 
 
 # ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
+# ==============================================================================
 # レーダーチャート作成関数
+# ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
 # ==============================================================================
 
 def create_coverage_radar_chart(plan_name: str) -> go.Figure:
@@ -520,7 +865,41 @@ def get_coverage_data_with_categories(plan_name: str) -> List[Tuple]:
 
 
 # ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
+# ==============================================================================
 # 特約保険料データ抽出関数
+# ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
 # ==============================================================================
 
 def get_special_contract_data() -> Dict:
@@ -688,7 +1067,41 @@ def show_special_contract_premium_dialog():
 
 
 # ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
+# ==============================================================================
 # チャットAPI呼び出し関数
+# ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
 # ==============================================================================
 
 def call_chat_api(user_message: str) -> str:
@@ -788,7 +1201,41 @@ def call_chat_api(user_message: str) -> str:
 
 
 # ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
+# ==============================================================================
 # PLY提案文生成関数
+# ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
 # ==============================================================================
 
 def generate_ply_proposal(plan_type: PlanType = PlanType.TAKE) -> str:
@@ -834,7 +1281,41 @@ def change_persona(new_persona_idx: int, persona_data: pd.DataFrame) -> None:
 
 
 # ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
+# ==============================================================================
 # ページ設定
+# ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
 # ==============================================================================
 
 st.set_page_config(
@@ -846,14 +1327,82 @@ st.set_page_config(
 
 
 # ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
+# ==============================================================================
 # セッション状態の初期化を実行
+# ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
 # ==============================================================================
 
 initialize_session_state()
 
 
 # ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
+# ==============================================================================
 # カスタムCSS
+# ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
 # ==============================================================================
 
 st.markdown("""
@@ -891,7 +1440,41 @@ st.markdown("""
 
 
 # ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
+# ==============================================================================
 # データ読み込み
+# ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
 # ==============================================================================
 
 persona_data = load_persona_data()
@@ -902,7 +1485,41 @@ persona_names = persona_data[contractor_name_col].tolist()
 
 
 # ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
+# ==============================================================================
 # 選択されたペルソナの情報を取得
+# ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
 # ==============================================================================
 
 selected_idx = st.session_state.selected_persona_idx
@@ -946,8 +1563,42 @@ else:
 age = calculate_age(birth_date)  #20240409
 
 
+# ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
 # ===========================================
 # サイドバー
+# ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
 # ===========================================
 
 with st.sidebar:
@@ -1012,15 +1663,83 @@ with st.sidebar:
         st.rerun()
 
 
+# ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
 # ===========================================
 # メインエリアのレイアウト
+# ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
 # ===========================================
 
 col_chat, col_right = st.columns([3, 1])
 
 
+# ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
 # ===========================================
 # 右側エリア（レーダーチャート + 保障額表示）
+# ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
 # ===========================================
 
 with col_right:
@@ -1082,8 +1801,42 @@ with col_right:
         st.button("📋 特約保険料金額確認", key="special_contract_btn_disabled", use_container_width=True, disabled=True, help="ドラフトプランを作成すると利用可能になります")
 
 
+# ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
 # ===========================================
 # チャットエリア
+# ==============================================================================
+# ボタンクリック時のコールバック関数 #20260410
+# ==============================================================================
+def handle_option_click(option_text: str):  #20260410
+    """オプションボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
+    st.session_state.button_options = []  #20260410 選択肢を即座に消す
+    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
+    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
+
+def handle_plan_click(plan_name: str):  #20260410
+    """プラン選択ボタンがクリックされた時の処理"""  #20260410
+    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
+    st.session_state.selected_radar_plan = plan_name  #20260410
+    st.session_state.pending_input_display = ""  #20260410
+    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
+
 # ===========================================
 
 with col_chat:
@@ -1108,21 +1861,8 @@ with col_chat:
             st.markdown("**以下から選択してください：**")
             
             for idx, option in enumerate(st.session_state.button_options):
-                if st.button(option, key=f"button_option_{idx}", use_container_width=True):
-                    st.session_state.messages.append({"role": "user", "content": option})
-                    st.session_state.button_options = []  #20240409 選択肢を非表示にする
-                    st.session_state.pending_input_display = option  #20240409 選択した内容を入力欄に表示
-                    
-                    with st.spinner("考え中..."):
-                        try:
-                            ai_response = call_chat_api(option)
-                            st.session_state.messages.append({"role": "assistant", "content": ai_response})
-                            # catalog から実際の保障額を同期
-                            sync_coverage_dict_from_catalog()
-                        except Exception as e:
-                            st.session_state.messages.append({"role": "assistant", "content": f"エラーが発生しました: {str(e)}"})
-                    
-                    st.rerun()
+                # コールバック関数を使って状態を更新し、即座にボタンを消す #20260410
+                st.button(option, key=f"button_option_{idx}", use_container_width=True, on_click=handle_option_click, args=(option,))  #20260410
         
         elif (status in (StatusFlg.OPTIONS, "OPTIONS", "StatusFlg.OPTIONS", "options")
               and not st.session_state.button_options
@@ -1139,20 +1879,8 @@ with col_chat:
             ]
             
             for num, text in option_buttons:
-                if st.button(text, key=f"option_{num}", use_container_width=True):
-                    st.session_state.messages.append({"role": "user", "content": text})
-                    st.session_state.pending_input_display = text  #20240409 選択した内容を入力欄に表示
-                    
-                    with st.spinner("考え中..."):
-                        try:
-                            ai_response = call_chat_api(text)
-                            st.session_state.messages.append({"role": "assistant", "content": ai_response})
-                            # catalog から実際の保障額を同期
-                            sync_coverage_dict_from_catalog()
-                        except Exception as e:
-                            st.session_state.messages.append({"role": "assistant", "content": f"エラーが発生しました: {str(e)}"})
-                    
-                    st.rerun()
+                # コールバック関数を使って状態を更新し、即座にボタンを消す #20260410
+                st.button(text, key=f"option_{num}", use_container_width=True, on_click=handle_option_click, args=(text,))  #20260410
         
         elif status in (StatusFlg.PROPOSAL, "PROPOSAL", "StatusFlg.PROPOSAL", "proposal"):
             st.markdown("---")
@@ -1234,29 +1962,47 @@ with col_chat:
     with col_btn:
         send_clicked = st.button("送信", type="primary", use_container_width=True)
     
-    if send_clicked:
+    if send_clicked and prompt.strip():  #20260410 空送信を防ぐ
         st.session_state.messages.append({"role": "user", "content": prompt})
         st.session_state.button_options = []
         st.session_state.pending_input_display = ""  #20240409 送信後は入力欄をクリア
+        st.session_state.pending_ai_request = prompt  #20260410 AIリクエストのフラグを立てる
+        st.rerun()  #20260410 ユーザーメッセージを画面に即反映させるためにリラン
+
+    # ==============================================================================
+    # 遅延実行されるAIリクエストの処理 #20260410
+    # ==============================================================================
+    if st.session_state.get("pending_ai_request"):  #20260410
+        request_text = st.session_state.pending_ai_request  #20260410
+        st.session_state.pending_ai_request = None  #20260410 フラグをクリア
         
-        with st.spinner("考え中..."):
-            try:
-                if st.session_state.status_flg in (StatusFlg.PROPOSAL, "PROPOSAL", "StatusFlg.PROPOSAL", "proposal"):
-                    explanation_ply = generate_ply_proposal()
-                    st.session_state.messages.append({"role": "assistant", "content": explanation_ply})
-                    st.session_state.status_flg = ""
-                    st.session_state.ply_shown = True
-                else:
-                    ai_response = call_chat_api(prompt)
-                    st.session_state.messages.append({"role": "assistant", "content": ai_response})
-                
-                # catalog から実際の保障額を同期
-                sync_coverage_dict_from_catalog()
-                
-            except Exception as e:
-                st.session_state.messages.append({"role": "assistant", "content": f"エラーが発生しました: {str(e)}"})
+        with st.chat_message("assistant"):  #20260410 スピナーをチャット枠内に表示
+            with st.spinner("考え中..."):  #20260410
+                try:  #20260410
+                    # プラン選択の場合の特殊処理 #20260410
+                    if request_text.startswith("PLAN_"):  #20260410
+                        plan_name = request_text.replace("PLAN_", "")  #20260410
+                        plan_enum = PlanType.MATSU if plan_name == "松" else (PlanType.TAKE if plan_name == "竹" else PlanType.UME)  #20260410
+                        result_text = generate_ply_proposal(plan_enum)  #20260410
+                        st.session_state.messages.append({"role": "assistant", "content": result_text})  #20260410
+                        st.session_state.status_flg = ""  #20260410
+                        st.session_state.ply_shown = True  #20260410
+                    # 通常の提案やチャットの場合 #20260410
+                    elif st.session_state.status_flg in (StatusFlg.PROPOSAL, "PROPOSAL", "StatusFlg.PROPOSAL", "proposal"):  #20260410
+                        explanation_ply = generate_ply_proposal()  #20260410
+                        st.session_state.messages.append({"role": "assistant", "content": explanation_ply})  #20260410
+                        st.session_state.status_flg = ""  #20260410
+                        st.session_state.ply_shown = True  #20260410
+                    else:  #20260410
+                        ai_response = call_chat_api(request_text)  #20260410
+                        st.session_state.messages.append({"role": "assistant", "content": ai_response})  #20260410
+                    
+                    sync_coverage_dict_from_catalog()  #20260410
+                    
+                except Exception as e:  #20260410
+                    st.session_state.messages.append({"role": "assistant", "content": f"エラーが発生しました: {str(e)}"})  #20260410
         
-        st.rerun()
+        st.rerun()  #20260410 処理完了後に画面を最終更新
 
 
 st.markdown("""
