@@ -43,24 +43,6 @@ def handle_plan_click(plan_name: str):  #20260410
 
 # ==============================================================================
 # 定数・設定ファイルの読み込み
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 
@@ -72,45 +54,9 @@ OUTPUT_FILE_PATH = BASE_FOLDER / Path(PARAMETERS["file_io"]["output_file"])
 COVERAGE_CATEGORY_DICT = PARAMETERS["coverage_category_dict"]
 
 
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 # プランとCoverageLevelのマッピング
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 
@@ -127,45 +73,9 @@ PLAN_TO_COVERAGE_LEVEL = {
 }
 
 
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 # 特約保険料表示用の定数
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 
@@ -185,45 +95,9 @@ PLAN_TYPE_TO_NAME = {
 }
 
 
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 # 年齢計算関数
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 
@@ -256,45 +130,9 @@ def calculate_age(birth_date) -> int:  #20240409
     return age  #20240409
 
 
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 # データ読み込み関数（キャッシュ付き）
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 
@@ -311,45 +149,9 @@ def load_persona_data() -> pd.DataFrame:
     return persona_data
 
 
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 # 応答解析関数
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 
@@ -379,45 +181,9 @@ def extract_button_options_from_response(response_text: str) -> Tuple[str, List[
     return main_text, options
 
 
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 # セッション状態の初期化
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 
@@ -546,45 +312,9 @@ def reset_conversation_state() -> None:
     st.session_state.should_scroll_to_user = False  #20260410
 
 
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 # 松プランの保障額に基づいて表示する項目を決定する関数
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 
@@ -616,45 +346,9 @@ def determine_visible_categories() -> Optional[List]:
     return visible_categories
 
 
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 # catalog から保障額を同期する関数
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 def sync_coverage_dict_from_catalog() -> None:
@@ -688,45 +382,9 @@ def sync_coverage_dict_from_catalog() -> None:
 
 
 
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 # レーダーチャート作成関数
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 
@@ -911,45 +569,9 @@ def get_coverage_data_with_categories(plan_name: str) -> List[Tuple]:
     return result
 
 
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 # 特約保険料データ抽出関数
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 
@@ -1117,45 +739,9 @@ def show_special_contract_premium_dialog():
             st.rerun()
 
 
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 # チャットAPI呼び出し関数
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 
@@ -1255,45 +841,9 @@ def call_chat_api(user_message: str) -> str:
     return ai_response
 
 
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 # PLY提案文生成関数
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 
@@ -1339,45 +889,9 @@ def change_persona(new_persona_idx: int, persona_data: pd.DataFrame) -> None:
     reset_conversation_state()
 
 
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 # ページ設定
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 
@@ -1389,90 +903,18 @@ st.set_page_config(
 )
 
 
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 # セッション状態の初期化を実行
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 
 initialize_session_state()
 
 
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 # カスタムCSS
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 
@@ -1510,45 +952,9 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 # データ読み込み
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 
@@ -1559,45 +965,9 @@ contractor_name_col = persona_data.columns[1] if len(persona_data.columns) > 1 e
 persona_names = persona_data[contractor_name_col].tolist()
 
 
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 # 選択されたペルソナの情報を取得
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ==============================================================================
 
@@ -1642,45 +1012,9 @@ else:
 age = calculate_age(birth_date)  #20240409
 
 
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ===========================================
 # サイドバー
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ===========================================
 
@@ -1746,90 +1080,18 @@ with st.sidebar:
         st.rerun()
 
 
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ===========================================
 # メインエリアのレイアウト
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ===========================================
 
 col_chat, col_right = st.columns([3, 1])
 
 
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ===========================================
 # 右側エリア（レーダーチャート + 保障額表示）
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ===========================================
 
@@ -1892,45 +1154,9 @@ with col_right:
         st.button("📋 特約保険料金額確認", key="special_contract_btn_disabled", use_container_width=True, disabled=True, help="ドラフトプランを作成すると利用可能になります")
 
 
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ===========================================
 # チャットエリア
-# ==============================================================================
-# ボタンクリック時のコールバック関数 #20260410
-# ==============================================================================
-def handle_option_click(option_text: str):  #20260410
-    """オプションボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": option_text})  #20260410
-    st.session_state.button_options = []  #20260410 選択肢を即座に消す
-    st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
-    st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
-
-def handle_plan_click(plan_name: str):  #20260410
-    """プラン選択ボタンがクリックされた時の処理"""  #20260410
-    st.session_state.messages.append({"role": "user", "content": f"{plan_name}プランを選択します"})  #20260410
-    st.session_state.selected_radar_plan = plan_name  #20260410
-    st.session_state.pending_input_display = ""  #20260410
-    st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
-    st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
 
 # ===========================================
 
