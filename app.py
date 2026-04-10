@@ -931,6 +931,18 @@ st.markdown("""
     h1 { font-size: 1.5rem !important; font-weight: 600 !important; color: #1a1a2e !important; margin-bottom: 0.5rem !important; }
     h2, h3, .stSubheader { font-size: 1rem !important; font-weight: 600 !important; color: #16213e !important; margin-bottom: 0.5rem !important; }
     [data-testid="stSidebar"] .stButton > button { background-color: #ffffff; border: 1px solid #dee2e6; color: #495057; font-weight: 500; font-size: 0.875rem; padding: 0.5rem 1rem; border-radius: 6px; }
+    /* #20260410 選択肢ボタンを横並び（ラップあり）にするためのCSSハック */
+    div[data-testid="stVerticalBlock"]:has(> div > .options-container-anchor) {
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        gap: 0.5rem !important;
+        align-items: center !important;
+    }
+    div[data-testid="stVerticalBlock"]:has(> div > .options-container-anchor) > div[data-testid="stElementContainer"] {
+        width: auto !important;
+        flex: 0 0 auto !important;
+    }
+    .options-container-anchor { display: none !important; }
     /* #20260410 オプションボタンをクリックした瞬間に全体がグレーになるのを防ぎ、即座に透明にする */
     .stButton > button[disabled] { opacity: 0 !important; visibility: hidden !important; transition: all 0s !important; }
     /* 特約保険料ボタン（disabled=Trueで使うやつ）は例外として表示をキープ */
@@ -1197,9 +1209,12 @@ with col_chat:
             st.markdown("---")
             st.markdown("**以下から選択してください：**")
             
-            for idx, option in enumerate(st.session_state.button_options):
-                # コールバック関数を使って状態を更新し、即座にボタンを消す #20260410
-                st.button(option, key=f"button_option_{idx}", use_container_width=True, on_click=handle_option_click, args=(option,))  #20260410
+            btn_container = st.container()  #20260410 インライン配置用のコンテナ
+            with btn_container:
+                st.markdown('<div class="options-container-anchor"></div>', unsafe_allow_html=True)  #20260410 CSS適用用の目印
+                for idx, option in enumerate(st.session_state.button_options):
+                    # 幅を自動調整にするため use_container_width=False に変更 #20260410
+                    st.button(option, key=f"button_option_{idx}", use_container_width=False, on_click=handle_option_click, args=(option,))  #20260410
         
         elif (status in (StatusFlg.OPTIONS, "OPTIONS", "StatusFlg.OPTIONS", "options")
               and not st.session_state.button_options
@@ -1216,9 +1231,12 @@ with col_chat:
                 ("5", "保障内容について教えてください")
             ]
             
-            for num, text in option_buttons:
-                # コールバック関数を使って状態を更新し、即座にボタンを消す #20260410
-                st.button(text, key=f"option_{num}", use_container_width=True, on_click=handle_option_click, args=(text,))  #20260410
+            btn_container = st.container()  #20260410 インライン配置用のコンテナ
+            with btn_container:
+                st.markdown('<div class="options-container-anchor"></div>', unsafe_allow_html=True)  #20260410 CSS適用用の目印
+                for num, text in option_buttons:
+                    # 幅を自動調整にするため use_container_width=False に変更 #20260410
+                    st.button(text, key=f"option_{num}", use_container_width=False, on_click=handle_option_click, args=(text,))  #20260410
         
         elif (status in (StatusFlg.PROPOSAL, "PROPOSAL", "StatusFlg.PROPOSAL", "proposal")
               and not st.session_state.get("pending_ai_request")):  #20260410 AIリクエスト待機中は表示しない
