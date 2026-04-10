@@ -921,11 +921,11 @@ initialize_session_state()
 st.markdown("""
 <style>
     [data-testid="stAppViewContainer"] { overflow: hidden !important; }  #20260410 画面全体のスクロールを無効化
-    [data-testid="stSidebar"] { position: relative !important; height: auto !important; overflow: visible !important; }
-    [data-testid="stSidebar"] > div:first-child { position: relative !important; height: auto !important; overflow: visible !important; }
-    [data-testid="stSidebarContent"] { overflow: visible !important; height: auto !important; }
+    [data-testid="stSidebar"] { position: relative !important; display: block !important; visibility: visible !important; height: 100vh !important; }
+    [data-testid="stSidebar"] > div:first-child { position: relative !important; display: block !important; visibility: visible !important; height: 100vh !important; overflow-y: auto !important; }
+    [data-testid="stSidebarContent"] { overflow-y: auto !important; height: 100% !important; }
     .main .block-container { padding-top: 1rem !important; padding-bottom: 1rem !important; padding-left: 0.25rem !important; padding-right: 1rem !important; max-width: 100% !important; }
-    [data-testid="stSidebar"] { background-color: #f8f9fa; border-right: 1px solid #e9ecef; min-width: 280px !important; width: 300px !important; }
+    [data-testid="stSidebar"] { background-color: #f8f9fa; border-right: 1px solid #e9ecef; min-width: 300px !important; max-width: 300px !important; width: 300px !important; }
     header[data-testid="stHeader"] { display: none !important; }  #20260410 ヘッダーの余白を完全に削除
     h1 { font-size: 1.5rem !important; font-weight: 600 !important; color: #1a1a2e !important; margin-bottom: 0.5rem !important; }
     h2, h3, .stSubheader { font-size: 1rem !important; font-weight: 600 !important; color: #16213e !important; margin-bottom: 0.5rem !important; }
