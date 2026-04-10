@@ -1188,7 +1188,7 @@ with col_chat:
         
         status = st.session_state.status_flg
         
-        if st.session_state.button_options:
+        if st.session_state.button_options and not st.session_state.get("pending_ai_request"):  #20260410
             st.markdown("---")
             st.markdown("**以下から選択してください：**")
             
@@ -1198,7 +1198,8 @@ with col_chat:
         
         elif (status in (StatusFlg.OPTIONS, "OPTIONS", "StatusFlg.OPTIONS", "options")
               and not st.session_state.button_options
-              and not st.session_state.ply_shown):
+              and not st.session_state.ply_shown
+              and not st.session_state.get("pending_ai_request")):  #20260410 AIリクエスト待機中は表示しない
             st.markdown("---")
             st.markdown("**AIにどのようなことを尋ねますか？**")
             
@@ -1214,7 +1215,8 @@ with col_chat:
                 # コールバック関数を使って状態を更新し、即座にボタンを消す #20260410
                 st.button(text, key=f"option_{num}", use_container_width=True, on_click=handle_option_click, args=(text,))  #20260410
         
-        elif status in (StatusFlg.PROPOSAL, "PROPOSAL", "StatusFlg.PROPOSAL", "proposal"):
+        elif (status in (StatusFlg.PROPOSAL, "PROPOSAL", "StatusFlg.PROPOSAL", "proposal")
+              and not st.session_state.get("pending_ai_request")):  #20260410 AIリクエスト待機中は表示しない
             st.markdown("---")
             st.markdown("**プランを選択してください**")
             
