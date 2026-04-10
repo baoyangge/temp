@@ -931,15 +931,15 @@ st.markdown("""
     h1 { font-size: 1.5rem !important; font-weight: 600 !important; color: #1a1a2e !important; margin-bottom: 0.5rem !important; }
     h2, h3, .stSubheader { font-size: 1rem !important; font-weight: 600 !important; color: #16213e !important; margin-bottom: 0.5rem !important; }
     [data-testid="stSidebar"] .stButton > button { background-color: #ffffff; border: 1px solid #dee2e6; color: #495057; font-weight: 500; font-size: 0.875rem; padding: 0.5rem 1rem; border-radius: 6px; }
-    /* #20260410 選択肢ボタンを横並び（ラップあり）にするためのCSSハック(修正版) */
-    div[data-testid="stVerticalBlock"]:has(.options-container-anchor) > div {
+    /* #20260410 選択肢ボタンを横並び（ラップあり）にするためのCSSハック(より安全な修正版) */
+    div[data-testid="stVerticalBlock"]:has(> div > div[data-testid="stElementContainer"] > .options-container-anchor) > div:first-child {
         display: flex !important;
         flex-direction: row !important;
         flex-wrap: wrap !important;
         gap: 0.5rem !important;
-        align-items: flex-start !important;
+        align-items: center !important;
     }
-    div[data-testid="stVerticalBlock"]:has(.options-container-anchor) div[data-testid="stElementContainer"] {
+    div[data-testid="stVerticalBlock"]:has(> div > div[data-testid="stElementContainer"] > .options-container-anchor) > div:first-child > div[data-testid="stElementContainer"] {
         width: auto !important;
         flex: 0 0 auto !important;
     }
