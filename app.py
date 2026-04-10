@@ -920,13 +920,13 @@ initialize_session_state()
 
 st.markdown("""
 <style>
-    [data-testid="stAppViewContainer"] { overflow: auto; }
+    [data-testid="stAppViewContainer"] { overflow: hidden !important; }  #20260410 画面全体のスクロールを無効化
     [data-testid="stSidebar"] { position: relative !important; height: auto !important; overflow: visible !important; }
     [data-testid="stSidebar"] > div:first-child { position: relative !important; height: auto !important; overflow: visible !important; }
     [data-testid="stSidebarContent"] { overflow: visible !important; height: auto !important; }
     .main .block-container { padding-top: 1rem !important; padding-bottom: 1rem !important; padding-left: 0.25rem !important; padding-right: 1rem !important; max-width: 100% !important; }
     [data-testid="stSidebar"] { background-color: #f8f9fa; border-right: 1px solid #e9ecef; min-width: 280px !important; width: 300px !important; }
-    header[data-testid="stHeader"] { height: 2rem !important; min-height: 0rem !important; background: transparent; }
+    header[data-testid="stHeader"] { display: none !important; }  #20260410 ヘッダーの余白を完全に削除
     h1 { font-size: 1.5rem !important; font-weight: 600 !important; color: #1a1a2e !important; margin-bottom: 0.5rem !important; }
     h2, h3, .stSubheader { font-size: 1rem !important; font-weight: 600 !important; color: #16213e !important; margin-bottom: 0.5rem !important; }
     [data-testid="stSidebar"] .stButton > button { background-color: #ffffff; border: 1px solid #dee2e6; color: #495057; font-weight: 500; font-size: 0.875rem; padding: 0.5rem 1rem; border-radius: 6px; }
@@ -1166,7 +1166,7 @@ with col_chat:
     
     # 高さを指定してスクロール可能なチャットコンテナに変更 #20260410
     # ここで高さを指定すると、この枠の中だけがスクロールするようになります
-    chat_container = st.container(height=600)  #20260410
+    chat_container = st.container(height=700)  #20260410 チャット専用のスクロール領域
     
     with chat_container:
         # 最後のユーザーメッセージのインデックスを特定する #20260410
@@ -1325,8 +1325,8 @@ with col_chat:
 st.markdown("""
 <style>
     [data-testid="stSidebarResizer"]{ width: 1px !important; background: #d0d7de !important; }
-    section[data-testid="stMain"]{ padding-left: 0.5rem !important; }
-    section[data-testid="stMain"] .block-container{ padding-left: 0.5rem !important; }
+    section[data-testid="stMain"]{ padding-left: 0.5rem !important; overflow: hidden !important; height: 100vh !important; }  #20260410 メインエリアを固定
+    section[data-testid="stMain"] .block-container{ padding-left: 0.5rem !important; height: 100vh !important; overflow: hidden !important; padding-top: 1rem !important; max-width: 100% !important; } #20260410 内部も固定し余白調整
 </style>
 """, unsafe_allow_html=True)
 
