@@ -925,7 +925,9 @@ st.markdown("""
     [data-testid="stSidebar"] > div:first-child { position: relative !important; height: 100vh !important; overflow-y: auto !important; }
     [data-testid="stSidebarContent"] { overflow-y: auto !important; height: 100% !important; }
     .main .block-container { padding-top: 1rem !important; padding-bottom: 1rem !important; padding-left: 0.25rem !important; padding-right: 1rem !important; max-width: 100% !important; }
-    header[data-testid="stHeader"] { display: none !important; }  #20260410 ヘッダーの余白を完全に削除
+    header[data-testid="stHeader"] { background: transparent !important; height: 0 !important; min-height: 0 !important; overflow: visible !important; }  #20260410 ヘッダーの余白を削除しつつ、中にある開閉ボタンは隠さない
+    [data-testid="collapsedControl"] { display: flex !important; z-index: 100000 !important; } /* #20260410 展開ボタンの強制表示（旧バージョン） */
+    [data-testid="stSidebarCollapsedControl"] { display: flex !important; z-index: 100000 !important; } /* #20260410 展開ボタンの強制表示（新バージョン） */
     h1 { font-size: 1.5rem !important; font-weight: 600 !important; color: #1a1a2e !important; margin-bottom: 0.5rem !important; }
     h2, h3, .stSubheader { font-size: 1rem !important; font-weight: 600 !important; color: #16213e !important; margin-bottom: 0.5rem !important; }
     [data-testid="stSidebar"] .stButton > button { background-color: #ffffff; border: 1px solid #dee2e6; color: #495057; font-weight: 500; font-size: 0.875rem; padding: 0.5rem 1rem; border-radius: 6px; }
