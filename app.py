@@ -32,6 +32,8 @@ def handle_option_click(option_text: str):  #20260410
     st.session_state.pending_input_display = ""  #20260410 入力欄もクリア
     st.session_state.pending_ai_request = option_text  #20260410 後続の処理でAIを呼ぶフラグを立てる
     st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
+    st.session_state.dyn_options_pills = None  #20260410new 旧pills選択値が残って再表示しないよう即座にクリア
+    st.session_state.static_options_pills = None  #20260410new 静的選択肢側も同様にクリア
 
 def handle_plan_click(plan_name: str):  #20260410
     """プラン選択ボタンがクリックされた時の処理"""  #20260410
@@ -40,6 +42,45 @@ def handle_plan_click(plan_name: str):  #20260410
     st.session_state.pending_input_display = ""  #20260410
     st.session_state.pending_ai_request = f"PLAN_{plan_name}"  #20260410 プラン選択専用のフラグ
     st.session_state.should_scroll_to_user = False  #20260410 新しいリクエストが来たのでスクロールフラグをリセット
+
+
+def render_wrapped_option_buttons(options: List[str], key_prefix: str = "option") -> None:  #20260410new
+    """文字数ベースで1行に収まるだけ配置し、収まらなければ次の行へ送る。"""  #20260410new
+    if not options:  #20260410new
+        return  #20260410new
+
+    max_row_units = 36  #20260410new 1行に置く目安。文字数ベースで自動折り返しするための閾値
+    min_button_units = 8  #20260410new 短い文でも極端に詰まりすぎないよう最小幅を持たせる
+    button_units = [max(len(str(option).strip()) + 4, min_button_units) for option in options]  #20260410new
+
+    rows: List[List[Tuple[str, int, int]]] = []  #20260410new
+    current_row: List[Tuple[str, int, int]] = []  #20260410new
+    current_units = 0  #20260410new
+
+    for index, (option, units) in enumerate(zip(options, button_units)):  #20260410new
+        if current_row and current_units + units > max_row_units:  #20260410new
+            rows.append(current_row)  #20260410new
+            current_row = []  #20260410new
+            current_units = 0  #20260410new
+        current_row.append((option, units, index))  #20260410new
+        current_units += units  #20260410new
+
+    if current_row:  #20260410new
+        rows.append(current_row)  #20260410new
+
+    for row_index, row in enumerate(rows):  #20260410new
+        row_widths = [units for _, units, _ in row]  #20260410new
+        cols = st.columns(row_widths)  #20260410new 文字数の長いボタンに広めの幅を割り当てる
+        for col, (option, _, option_index) in zip(cols, row):  #20260410new
+            with col:  #20260410new
+                if st.button(  #20260410new
+                    option,
+                    key=f"{key_prefix}_{row_index}_{option_index}",
+                    use_container_width=True,
+                    on_click=handle_option_click,
+                    args=(option,),
+                ):
+                    pass  #20260410new コールバック側で先に選択肢を消し、その後の対話処理へ渡す
 
 # ==============================================================================
 # 定数・設定ファイルの読み込み
@@ -276,6 +317,10 @@ def initialize_session_state() -> None:
     # AIへのリクエストを遅延実行するための状態変数 #20260410
     if "pending_ai_request" not in st.session_state:  #20260410
         st.session_state.pending_ai_request = None  #20260410
+    if "dyn_options_pills" not in st.session_state:  #20260410new
+        st.session_state.dyn_options_pills = None  #20260410new 旧実装の選択値が残らないよう初期化
+    if "static_options_pills" not in st.session_state:  #20260410new
+        st.session_state.static_options_pills = None  #20260410new 旧実装の選択値が残らないよう初期化
     st.session_state.should_scroll_to_user = False  #20260410
     
     # 自動スクロール用のフラグ #20260410
@@ -309,6 +354,8 @@ def reset_conversation_state() -> None:
     st.session_state.radar_visible_categories = None
     st.session_state.pending_input_display = ""  #20240409
     st.session_state.pending_ai_request = None  #20260410
+    st.session_state.dyn_options_pills = None  #20260410new
+    st.session_state.static_options_pills = None  #20260410new
     st.session_state.should_scroll_to_user = False  #20260410
 
 
@@ -931,13 +978,7 @@ st.markdown("""
     h1 { font-size: 1.5rem !important; font-weight: 600 !important; color: #1a1a2e !important; margin-bottom: 0.5rem !important; }
     h2, h3, .stSubheader { font-size: 1rem !important; font-weight: 600 !important; color: #16213e !important; margin-bottom: 0.5rem !important; }
     [data-testid="stSidebar"] .stButton > button { background-color: #ffffff; border: 1px solid #dee2e6; color: #495057; font-weight: 500; font-size: 0.875rem; padding: 0.5rem 1rem; border-radius: 6px; }
-        /* #20260410 Streamlit 1.56.0対応: 選択肢ボタンの横並び（ラップあり） */
-    div[data-testid="stElementContainer"]:has(.inline-button-target) {
-        display: inline-block !important;
-        width: auto !important;
-        margin-right: 0.5rem !important;
-        margin-bottom: 0.5rem !important;
-    }
+    div[data-testid="stHorizontalBlock"] > div[data-testid="column"] .stButton > button { white-space: normal !important; } /* #20260410new 選択肢ボタン内の改行を許可し、長い文字列でも崩れにくくする */
     /* #20260410 オプションボタンをクリックした瞬間に全体がグレーになるのを防ぎ、即座に透明にする */
     .stButton > button[disabled] { opacity: 0 !important; visibility: hidden !important; transition: all 0s !important; }
     /* 特約保険料ボタン（disabled=Trueで使うやつ）は例外として表示をキープ */
@@ -1203,14 +1244,7 @@ with col_chat:
         if st.session_state.button_options and not st.session_state.get("pending_ai_request"):  #20260410
             st.markdown("---")
             st.markdown("**以下から選択してください：**")
-            
-            # st.pillsを使用してネイティブに横並び・折り返しを実現 #20260410
-            def on_dyn_pill_change():
-                selected = st.session_state.get("dyn_options_pills")
-                if selected:
-                    handle_option_click(selected)
-                    
-            st.pills("オプションを選択", st.session_state.button_options, key="dyn_options_pills", label_visibility="collapsed", on_change=on_dyn_pill_change)  #20260410
+            render_wrapped_option_buttons(st.session_state.button_options, key_prefix="dyn_option")  #20260410new 文字数ベースで横に詰め、入らなければ次行へ回す
         
         elif (status in (StatusFlg.OPTIONS, "OPTIONS", "StatusFlg.OPTIONS", "options")
               and not st.session_state.button_options
@@ -1227,14 +1261,8 @@ with col_chat:
                 ("5", "保障内容について教えてください")
             ]
             
-            # st.pillsを使用してネイティブに横並び・折り返しを実現 #20260410
-            def on_static_pill_change():
-                selected = st.session_state.get("static_options_pills")
-                if selected:
-                    handle_option_click(selected)
-                    
             static_options = [text for num, text in option_buttons]
-            st.pills("オプションを選択", static_options, key="static_options_pills", label_visibility="collapsed", on_change=on_static_pill_change)  #20260410
+            render_wrapped_option_buttons(static_options, key_prefix="static_option")  #20260410new 文字数ベースで自然に折り返す選択肢表示
         
         elif (status in (StatusFlg.PROPOSAL, "PROPOSAL", "StatusFlg.PROPOSAL", "proposal")
               and not st.session_state.get("pending_ai_request")):  #20260410 AIリクエスト待機中は表示しない
@@ -1304,6 +1332,8 @@ with col_chat:
     if prompt := st.chat_input("メッセージを入力してください..."):  #20260410 入力欄を最下部に固定
         st.session_state.messages.append({"role": "user", "content": prompt})  #20260410 ユーザーメッセージを追加
         st.session_state.button_options = []  #20260410 選択肢をクリア
+        st.session_state.dyn_options_pills = None  #20260410new
+        st.session_state.static_options_pills = None  #20260410new
         st.session_state.pending_input_display = ""  #20260410 古い入力表示をクリア
         st.session_state.pending_ai_request = prompt  #20260410 AIリクエストのフラグを立てる
         st.rerun()  #20260410 画面を再描画してメッセージを即反映
