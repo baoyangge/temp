@@ -1327,6 +1327,8 @@ with col_chat:
 st.markdown("""
 <style>
     [data-testid="stSidebarResizer"]{ width: 1px !important; background: #d0d7de !important; }
+    [data-testid="collapsedControl"] { display: none !important; } /* #20260410 サイドバーを隠すボタンを完全に削除 */
+    [data-testid="stSidebarCollapsedControl"] { display: none !important; } /* #20260410 サイドバーを隠すボタンを完全に削除(新バージョン) */
     section[data-testid="stMain"]{ padding-left: 0.5rem !important; overflow: hidden !important; height: 100vh !important; }  #20260410 メインエリアを固定
     section[data-testid="stMain"] .block-container{ padding-left: 0.5rem !important; height: 100vh !important; overflow: hidden !important; padding-top: 1rem !important; max-width: 100% !important; } #20260410 内部も固定し余白調整
     [data-testid="stMainBlockContainer"] { padding-top: 1rem !important; } /* Streamlitの新バージョン用 */
