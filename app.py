@@ -921,11 +921,10 @@ initialize_session_state()
 st.markdown("""
 <style>
     [data-testid="stAppViewContainer"] { overflow: hidden !important; }  #20260410 画面全体のスクロールを無効化
-    [data-testid="stSidebar"] { position: relative !important; display: block !important; visibility: visible !important; height: 100vh !important; }
-    [data-testid="stSidebar"] > div:first-child { position: relative !important; display: block !important; visibility: visible !important; height: 100vh !important; overflow-y: auto !important; }
+    [data-testid="stSidebar"] { position: relative !important; height: 100vh !important; background-color: #f8f9fa; border-right: 1px solid #e9ecef; } /* #20260410 幅と表示の強制を解除 */
+    [data-testid="stSidebar"] > div:first-child { position: relative !important; height: 100vh !important; overflow-y: auto !important; }
     [data-testid="stSidebarContent"] { overflow-y: auto !important; height: 100% !important; }
     .main .block-container { padding-top: 1rem !important; padding-bottom: 1rem !important; padding-left: 0.25rem !important; padding-right: 1rem !important; max-width: 100% !important; }
-    [data-testid="stSidebar"] { background-color: #f8f9fa; border-right: 1px solid #e9ecef; min-width: 300px !important; max-width: 300px !important; width: 300px !important; }
     header[data-testid="stHeader"] { display: none !important; }  #20260410 ヘッダーの余白を完全に削除
     h1 { font-size: 1.5rem !important; font-weight: 600 !important; color: #1a1a2e !important; margin-bottom: 0.5rem !important; }
     h2, h3, .stSubheader { font-size: 1rem !important; font-weight: 600 !important; color: #16213e !important; margin-bottom: 0.5rem !important; }
@@ -1327,8 +1326,7 @@ with col_chat:
 st.markdown("""
 <style>
     [data-testid="stSidebarResizer"]{ width: 1px !important; background: #d0d7de !important; }
-    [data-testid="collapsedControl"] { display: none !important; } /* #20260410 サイドバーを隠すボタンを完全に削除 */
-    [data-testid="stSidebarCollapsedControl"] { display: none !important; } /* #20260410 サイドバーを隠すボタンを完全に削除(新バージョン) */
+    /* #20260410 開閉ボタンの非表示設定を削除し、トグル可能に戻す */
     section[data-testid="stMain"]{ padding-left: 0.5rem !important; overflow: hidden !important; height: 100vh !important; }  #20260410 メインエリアを固定
     section[data-testid="stMain"] .block-container{ padding-left: 0.5rem !important; height: 100vh !important; overflow: hidden !important; padding-top: 1rem !important; max-width: 100% !important; } #20260410 内部も固定し余白調整
     [data-testid="stMainBlockContainer"] { padding-top: 1rem !important; } /* Streamlitの新バージョン用 */
