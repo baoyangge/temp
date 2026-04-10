@@ -931,6 +931,10 @@ st.markdown("""
     h1 { font-size: 1.5rem !important; font-weight: 600 !important; color: #1a1a2e !important; margin-bottom: 0.5rem !important; }
     h2, h3, .stSubheader { font-size: 1rem !important; font-weight: 600 !important; color: #16213e !important; margin-bottom: 0.5rem !important; }
     [data-testid="stSidebar"] .stButton > button { background-color: #ffffff; border: 1px solid #dee2e6; color: #495057; font-weight: 500; font-size: 0.875rem; padding: 0.5rem 1rem; border-radius: 6px; }
+    /* #20260410 オプションボタンをクリックした瞬間に全体がグレーになるのを防ぎ、即座に透明にする */
+    .stButton > button[disabled] { opacity: 0 !important; visibility: hidden !important; transition: all 0s !important; }
+    /* 特約保険料ボタン（disabled=Trueで使うやつ）は例外として表示をキープ */
+    [data-testid="stMain"] .stButton:last-of-type > button[disabled] { opacity: 0.5 !important; visibility: visible !important; }
     [data-testid="stSidebar"] .stButton > button:hover { background-color: #e9ecef; border-color: #adb5bd; }
     [data-testid="stSidebar"] .stButton > button[kind="primary"] { background-color: #29A383 !important; border-color: #29A383 !important; color: white !important; }
     .stChatMessage { padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 0.5rem; }
