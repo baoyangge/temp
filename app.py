@@ -884,6 +884,8 @@ def get_special_contract_data() -> Dict:
                 
                 if benefit_amount > 0:
                     benefit_display = f"{benefit_amount:,}"
+                elif benefit_amount == -999:
+                    benefit_display = "なし"
                 else:
                     benefit_display = "付加"
                 
@@ -1572,6 +1574,122 @@ with col_right:
     if has_catalog:
         if st.button("全プラン詳細確認", key="special_contract_btn", use_container_width=True, type="secondary"):
             show_special_contract_premium_dialog()
+            
+        st.markdown("---")
+        st.markdown(f"**詳細調整 ({st.session_state.selected_radar_plan}プラン)**")
+        
+        CATEGORY_ABBR = {
+            "病気・ケガへの備え": "病気",
+            "がん保障": "がん",
+            "循環器病保障": "循環器",
+            "特定重度疾病保障": "重度疾病",
+            "障害・就労不能保障": "障害就労",
+            "健康促進保障": "健康促進",
+        }
+        
+        selected_plan_name = st.session_state.selected_radar_plan
+        plan_type_map = {"松": PlanType.MATSU, "竹": PlanType.TAKE, "梅": PlanType.UME}
+        selected_plan_type = plan_type_map.get(selected_plan_name)
+        
+        catalog = st.session_state.catalog
+        plan = catalog.get(selected_plan_type) if catalog and selected_plan_type else None
+        
+        if plan:
+            st.markdown(
+                """
+                <style>
+                .cat-badge {
+                    background-color: #f0f2f6; 
+                    border-left: 4px solid #667eea; 
+                    padding: 4px 8px; 
+                    font-size: 0.8em; 
+                    font-weight: bold; 
+                    border-radius: 2px;
+                    display: inline-block;
+                }
+                .contract-name {
+                    font-size: 0.85em; 
+                    font-weight: 500;
+                    line-height: 1.2;
+                }
+                .adj-btn {
+                    padding: 0 !important;
+                    margin: 0 !important;
+                }
+                </style>
+                """, unsafe_allow_html=True
+            )
+            
+            detail_container = st.container(height=350)
+            with detail_container:
+                for attr_name, category_name in SPECIAL_CONTRACT_CATEGORY_ORDER:
+                    contracts = getattr(plan, attr_name, {})
+                    if not contracts:
+                        continue
+                    
+                    abbr = CATEGORY_ABBR.get(category_name, category_name)
+                    
+                    for contract_type, contract_info in contracts.items():
+                        contract_name = contract_type.value if hasattr(contract_type, 'value') else str(contract_type)
+                        benefit_amount = contract_info.benefit_amount_yen
+                        
+                        state_key = f"adj_{selected_plan_name}_{attr_name}_{contract_name}"
+                        orig_state_key = f"orig_{state_key}"
+                        
+                        if state_key not in st.session_state:
+                            st.session_state[state_key] = benefit_amount
+                        if orig_state_key not in st.session_state:
+                            st.session_state[orig_state_key] = benefit_amount if benefit_amount > 0 else 0
+                        
+                        current_val = st.session_state[state_key]
+                        is_toggle_type = (st.session_state[orig_state_key] == 0)
+                        
+                        c1, c2, c3, c4, c5 = st.columns([1.5, 3.5, 1, 2.5, 1])
+                        
+                        with c1:
+                            st.markdown(f'<div class="cat-badge" style="margin-top: 6px;">{abbr}</div>', unsafe_allow_html=True)
+                        with c2:
+                            st.markdown(f'<div class="contract-name" style="margin-top: 8px;">{contract_name}</div>', unsafe_allow_html=True)
+                        
+                        with c3:
+                            if st.button("－", key=f"m_{state_key}", use_container_width=True):
+                                if is_toggle_type or current_val <= 0:
+                                    st.session_state[state_key] = -999 # なし
+                                else:
+                                    step = 1000 if current_val <= 10000 else 5000
+                                    new_val = max(0, current_val - step)
+                                    st.session_state[state_key] = -999 if new_val == 0 else new_val
+                                contract_info.benefit_amount_yen = st.session_state[state_key]
+                                st.rerun()
+                                
+                        with c4:
+                            if is_toggle_type or current_val == -999:
+                                display_text = "なし" if current_val == -999 else "付加"
+                                color = "#ff4b4b" if current_val == -999 else "#29A383"
+                                st.markdown(f'<div style="text-align: center; margin-top: 6px; font-weight: bold; color: {color};">{display_text}</div>', unsafe_allow_html=True)
+                            else:
+                                new_val = st.number_input(
+                                    "Amount", 
+                                    value=current_val, 
+                                    key=f"in_{state_key}", 
+                                    label_visibility="collapsed", 
+                                    step=1000
+                                )
+                                if new_val != current_val:
+                                    st.session_state[state_key] = new_val
+                                    contract_info.benefit_amount_yen = new_val
+                                    st.rerun()
+                                    
+                        with c5:
+                            if st.button("＋", key=f"p_{state_key}", use_container_width=True):
+                                if current_val == -999:
+                                    st.session_state[state_key] = st.session_state[orig_state_key]
+                                elif not is_toggle_type:
+                                    step = 1000 if current_val < 10000 else 5000
+                                    st.session_state[state_key] = current_val + step
+                                contract_info.benefit_amount_yen = st.session_state[state_key]
+                                st.rerun()
+                                
     else:
         st.button("全プラン詳細確認", key="special_contract_btn_disabled", use_container_width=True, disabled=True, help="ドラフトプランを作成すると利用可能になります")
 
