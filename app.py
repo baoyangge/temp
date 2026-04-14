@@ -1626,15 +1626,18 @@ with col_right:
                     font-weight: 500;
                     line-height: 1.2;
                 }
-                /* 【調整3】+/-ボタンの絶対配置（Absolute Centering）による強制中央揃え #20260414_李修正 */
-                div[data-testid="column"] button {
+                /* 【調整3】+/-ボタンの絶対配置（Absolute Centering）による強制中央揃え #20260414_李修正_v2 */
+                /* ボタンの親コンテナから全てのマージン/パディングをリセット */
+                div[data-testid="column"] > div > div > div > div > button {
                     position: relative !important;
                     display: block !important;
                     overflow: hidden !important;
                     padding: 0 !important;
-                    min-height: 2em !important; /* ボタンが潰れないように最低高さを確保 */
+                    margin: 0 !important;
+                    min-height: 2.2em !important; 
+                    box-sizing: border-box !important;
                 }
-                /* ボタン内部のテキスト要素を完全に浮かせて中央に固定 #20260414_李修正 */
+                /* ボタン内部のテキスト要素を完全に浮かせて中央に固定 */
                 div[data-testid="column"] button p, 
                 div[data-testid="column"] button span, 
                 div[data-testid="column"] button div {
@@ -1647,6 +1650,12 @@ with col_right:
                     line-height: 1 !important;
                     width: 100% !important;
                     text-align: center !important;
+                    box-sizing: border-box !important;
+                }
+                /* Streamlit内部の特定ハッシュクラスのpaddingを上書き（再挑戦） */
+                div[data-testid="column"] button * {
+                    padding-right: 0px !important;
+                    margin-right: 0px !important;
                 }
                 /* 【調整4】「付加/なし」などのフォントサイズ #20260414_李修正 */
                 .adj-value {
