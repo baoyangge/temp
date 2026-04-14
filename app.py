@@ -1937,23 +1937,39 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==============================================================================
-# AI回答後の自動スクロール（ハック） #20260410
+# AI回答後の自動スクロール無効化インターセプター #20260414_李修正
 # ==============================================================================
-if st.session_state.get("should_scroll_to_user"):  #20260410 李修正　スクロールフラグが立っている場合のみ実行
-    components.html(
-        """
-        <script>
-            // Streamlitの親フレーム（実際のページ）からアンカーを探す #20260410
-            const element = window.parent.document.getElementById("latest-user-message");
-            if (element) {
-                // Streamlitのデフォルトの自動スクロール（一番下へ）と競合しないよう、少し遅延させる #20260410
-                setTimeout(() => {
-                    element.scrollIntoView({behavior: "smooth", block: "start"});
-                }, 300);
-            }
-        </script>
-        """,
-        height=0  #20260410 李修正　iframeを見えなくする
-    )
-    st.session_state.should_scroll_to_user = False  #20260410 李修正　一度実行したらフラグを戻す
+components.html(
+    """
+    <script>
+        // Streamlitの親フレーム（実際のページ）の関数をインターセプトする #20260414_李修正
+        const parentWindow = window.parent;
+        if (!parentWindow.__autoScrollDisabled) {
+            // 自動スクロールは通常scrollIntoViewを使って実装されるため、これをオーバーライド
+            const originalScrollIntoView = parentWindow.Element.prototype.scrollIntoView;
+            parentWindow.Element.prototype.scrollIntoView = function(...args) {
+                // stChatMessage（チャットメッセージ）の描画に伴う自動スクロールをブロック
+                if (this.getAttribute && this.getAttribute('data-testid') === 'stChatMessage') {
+                    return; // 何もしない（自動スクロールを無効化）
+                }
+                
+                // 特定の見えないアンカー等からのスクロールもブロック
+                if (this.className && typeof this.className === 'string' && this.className.includes('stChatMessage')) {
+                    return; // 自動スクロール無効化
+                }
+
+                // デフォルトの振る舞いを維持
+                return originalScrollIntoView.apply(this, args);
+            };
+            
+            parentWindow.__autoScrollDisabled = true;
+        }
+    </script>
+    """,
+    height=0  # iframeを見えなくする
+)
+
+# 以前のスクロールフラグリセットロジックを念のため残しつつ無効化 #20260414_李修正
+if "should_scroll_to_user" in st.session_state:
+    st.session_state.should_scroll_to_user = False
 
