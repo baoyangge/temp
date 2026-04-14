@@ -1519,6 +1519,20 @@ col_chat, col_right = st.columns([3, 1])
 # ===========================================
 
 with col_right:
+    st.markdown(
+        """
+        <style>
+        /* 右側カラム全体の垂直余白を詰める */
+        div[data-testid="column"]:nth-of-type(2) > div > div > div {
+            gap: 0.2rem !important;
+        }
+        div[data-testid="column"]:nth-of-type(2) div[data-testid="stVerticalBlock"] > div > div {
+            padding-bottom: 0.1rem !important;
+            padding-top: 0.1rem !important;
+        }
+        </style>
+        """, unsafe_allow_html=True
+    )
     st.subheader("必要保障額")
     
     # プラン選択ボタン
@@ -1575,7 +1589,6 @@ with col_right:
         if st.button("全プラン詳細確認", key="special_contract_btn", use_container_width=True, type="secondary"):
             show_special_contract_premium_dialog()
             
-        st.markdown("---")
         st.markdown(f"**詳細調整 ({st.session_state.selected_radar_plan}プラン)**")
         
         CATEGORY_ABBR = {
@@ -1600,7 +1613,6 @@ with col_right:
                 <style>
                 .cat-badge {
                     background-color: #f0f2f6; 
-                    border-left: 4px solid #667eea; 
                     padding: 4px 8px; 
                     font-size: 0.8em; 
                     font-weight: bold; 
@@ -1629,6 +1641,16 @@ with col_right:
                     
                     abbr = CATEGORY_ABBR.get(category_name, category_name)
                     
+                    color_map = {
+                        "病気": "#F17079",
+                        "がん": "#F37932",
+                        "循環器": "#F37932",
+                        "重度疾病": "#F37932",
+                        "障害就労": "#6FBF54",
+                        "健康促進": "#00A78E",
+                    }
+                    badge_color = color_map.get(abbr, "#667eea")
+                    
                     for contract_type, contract_info in contracts.items():
                         contract_name = contract_type.value if hasattr(contract_type, 'value') else str(contract_type)
                         benefit_amount = contract_info.benefit_amount_yen
@@ -1647,7 +1669,7 @@ with col_right:
                         c1, c2, c3, c4, c5 = st.columns([1.5, 3.5, 1, 2.5, 1])
                         
                         with c1:
-                            st.markdown(f'<div class="cat-badge" style="margin-top: 6px;">{abbr}</div>', unsafe_allow_html=True)
+                            st.markdown(f'<div class="cat-badge" style="border-left: 4px solid {badge_color}; margin-top: 6px;">{abbr}</div>', unsafe_allow_html=True)
                         with c2:
                             st.markdown(f'<div class="contract-name" style="margin-top: 8px;">{contract_name}</div>', unsafe_allow_html=True)
                         
