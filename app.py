@@ -1942,6 +1942,66 @@ st.markdown("""
     section[data-testid="stMain"]{ padding-left: 0.5rem !important; overflow: hidden !important; height: 100vh !important; }  #20260410 李修正　メインエリアを固定
     section[data-testid="stMain"] .block-container{ padding-left: 10px !important; height: 100vh !important; overflow: hidden !important; padding-top: 70px !important; max-width: 100% !important; } #20260410 李修正　内部も固定し余白調整
     [data-testid="stMainBlockContainer"] { padding-top: 70px !important; padding-left: 10px !important;} /* Streamlitの新バージョン用 */
+
+    /* ============================================================================== */
+    /* 全局チャット吹き出し（気泡）スタイル上書き #20260414_李修正 */
+    /* ============================================================================== */
+    /* stChatMessageコンテナ自体のパディングなどを微調整 */
+    div[data-testid="stChatMessage"] {
+        padding: 0.5rem 1rem !important;
+        border-radius: 10px !important;
+        margin-bottom: 0.5rem !important;
+        background-color: transparent !important;
+        display: flex !important;
+        align-items: flex-start !important;
+    }
+    
+    /* ユーザーの発言（ユーザーアバターを持つメッセージ）*/
+    div[data-testid="stChatMessage"]:has(div[data-testid="stChatMessageAvatarUser"]),
+    div[data-testid="stChatMessage"]:has(div[class*="user"]) {
+        flex-direction: row-reverse !important; /* アバターを右に配置 */
+    }
+    
+    /* ユーザーのテキスト吹き出し部分 */
+    div[data-testid="stChatMessage"]:has(div[data-testid="stChatMessageAvatarUser"]) div[data-testid="stMarkdownContainer"],
+    div[data-testid="stChatMessage"]:has(div[class*="user"]) div[data-testid="stMarkdownContainer"] {
+        background-color: #95ec69 !important; /* WeChat風の緑色 */
+        color: #000000 !important;
+        padding: 10px 15px !important;
+        border-radius: 12px 0px 12px 12px !important; /* 右上を尖らせる */
+        box-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;
+        margin-right: 10px !important;
+        margin-left: 50px !important;
+        display: inline-block !important;
+    }
+
+    /* AIアシスタントの発言（アシスタントアバターを持つメッセージ）*/
+    div[data-testid="stChatMessage"]:has(div[data-testid="stChatMessageAvatarAssistant"]),
+    div[data-testid="stChatMessage"]:has(div[class*="assistant"]) {
+        flex-direction: row !important; /* アバターを左に配置 */
+    }
+
+    /* AIアシスタントのテキスト吹き出し部分 */
+    div[data-testid="stChatMessage"]:has(div[data-testid="stChatMessageAvatarAssistant"]) div[data-testid="stMarkdownContainer"],
+    div[data-testid="stChatMessage"]:has(div[class*="assistant"]) div[data-testid="stMarkdownContainer"] {
+        background-color: #ffffff !important; /* 白色 */
+        color: #333333 !important;
+        padding: 10px 15px !important;
+        border-radius: 0px 12px 12px 12px !important; /* 左上を尖らせる */
+        border: 1px solid #e5e5e5 !important;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+        margin-left: 10px !important;
+        margin-right: 50px !important;
+        display: inline-block !important;
+    }
+    
+    /* アバター画像のサイズ調整 */
+    div[data-testid="stChatMessageAvatarUser"],
+    div[data-testid="stChatMessageAvatarAssistant"] {
+        width: 35px !important;
+        height: 35px !important;
+        min-width: 35px !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
