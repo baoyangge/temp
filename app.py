@@ -1643,6 +1643,10 @@ with col_right:
                     margin: 0px !important;
                     line-height: 1 !important;
                 }
+                /* Streamlit内部の特定ハッシュクラスのpaddingを上書き #20260414_李修正 */
+                .st-emotion-cache-1ydy7s {
+                    padding-right: 0rem !important;
+                }
                 /* 【調整4】「付加/なし」などのフォントサイズ #20260414_李修正 */
                 .adj-value {
                     font-size: 0.85em;
