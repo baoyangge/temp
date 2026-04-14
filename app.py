@@ -1533,7 +1533,7 @@ with col_right:
         </style>
         """, unsafe_allow_html=True
     )
-    st.subheader("必要保障額")
+    #0414李修正st.subheader("必要保障額")
     
     # プラン選択ボタン
     plan_col1, plan_col2, plan_col3 = st.columns(3)
@@ -1556,7 +1556,7 @@ with col_right:
             st.session_state.selected_radar_plan = "梅"
             st.rerun()
     
-    st.caption(f"選択中: **{st.session_state.selected_radar_plan}プラン**")
+    #0414李修正st.caption(f"選択中: **{st.session_state.selected_radar_plan}プラン**")
     
     # レーダーチャートを表示
     radar_fig = create_coverage_radar_chart(st.session_state.selected_radar_plan)
@@ -1589,7 +1589,7 @@ with col_right:
         if st.button("全プラン詳細確認", key="special_contract_btn", use_container_width=True, type="secondary"):
             show_special_contract_premium_dialog()
             
-        st.markdown(f"**詳細調整 ({st.session_state.selected_radar_plan}プラン)**")
+        #0414李修正 st.markdown(f"**詳細調整 ({st.session_state.selected_radar_plan}プラン)**")
         
         CATEGORY_ABBR = {
             "病気・ケガへの備え": "病気",
@@ -1751,7 +1751,7 @@ with col_chat:
         status = st.session_state.status_flg
         
         if st.session_state.button_options and not st.session_state.get("pending_ai_request") and not st.session_state.get("is_processing"):  #20260410
-            st.markdown("---")
+            #0414李修正　st.markdown("---")
             st.markdown("**以下から選択してください：**")
             
             btn_container = st.container()  #20260410 李修正　インライン配置用のコンテナ
