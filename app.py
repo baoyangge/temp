@@ -1758,10 +1758,7 @@ with col_chat:
 
         for i, message in enumerate(st.session_state.messages):
             with st.chat_message(message["role"]):
-                # 最後のユーザーメッセージの直前にHTMLアンカー（目印）を埋め込む #20260410 李修正　
-                if i == last_user_idx:  #20260410 李修正　
-                    st.markdown('<div id="latest-user-message"></div>', unsafe_allow_html=True)  #20260410 李修正　
-                
+                # 以前のスクロール用アンカーは不要となったため削除 #20260414_李修正
                 if message["content"] == "":
                     st.markdown("*（プラン作成）*")
                 else:
@@ -1975,7 +1972,7 @@ st.markdown("""
     /* ユーザーのテキスト吹き出し部分 */
     div[data-testid="stChatMessage"]:has(div[data-testid="stChatMessageAvatarUser"]) div[data-testid="stMarkdownContainer"],
     div[data-testid="stChatMessage"]:has(div[class*="user"]) div[data-testid="stMarkdownContainer"] {
-        background-color: #A4FF90 !important; /* カスタム緑色 #20260414_李修正 */
+        background-color: #C9E8E0 !important; /* カスタム緑色 #20260414_李修正 */
         color: #000000 !important;
         padding: 10px 15px !important;
         border-radius: 12px !important; /* 全て角丸にする #20260414_李修正 */
