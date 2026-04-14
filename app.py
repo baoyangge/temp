@@ -1626,12 +1626,22 @@ with col_right:
                     font-weight: 500;
                     line-height: 1.2;
                 }
-                /* 【調整3】+/-ボタンのセンタリングと余白削除 #20260414_李修正 */
+                /* 【調整3】+/-ボタンのセンタリングと内部余白完全削除 #20260414_李修正 */
                 div[data-testid="column"] button {
                     padding: 0px !important;
+                    min-height: 0px !important;
+                    line-height: 1 !important;
                     display: flex !important; 
                     justify-content: center !important; 
                     align-items: center !important; 
+                }
+                /* ボタン内部のp, span, div要素のpaddingも強制削除 #20260414_李修正 */
+                div[data-testid="column"] button p, 
+                div[data-testid="column"] button span, 
+                div[data-testid="column"] button div {
+                    padding: 0px !important;
+                    margin: 0px !important;
+                    line-height: 1 !important;
                 }
                 /* 【調整4】「付加/なし」などのフォントサイズ #20260414_李修正 */
                 .adj-value {
