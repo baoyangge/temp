@@ -1965,14 +1965,15 @@ st.markdown("""
     /* ユーザーのテキスト吹き出し部分 */
     div[data-testid="stChatMessage"]:has(div[data-testid="stChatMessageAvatarUser"]) div[data-testid="stMarkdownContainer"],
     div[data-testid="stChatMessage"]:has(div[class*="user"]) div[data-testid="stMarkdownContainer"] {
-        background-color: #95ec69 !important; /* WeChat風の緑色 */
+        background-color: #A4FF90 !important; /* カスタム緑色 #20260414_李修正 */
         color: #000000 !important;
         padding: 10px 15px !important;
-        border-radius: 12px 0px 12px 12px !important; /* 右上を尖らせる */
+        border-radius: 12px !important; /* 全て角丸にする #20260414_李修正 */
         box-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;
         margin-right: 10px !important;
         margin-left: 50px !important;
         display: inline-block !important;
+        border: none !important; /* 破れや余計な枠線を防ぐ #20260414_李修正 */
     }
 
     /* AIアシスタントの発言（アシスタントアバターを持つメッセージ）*/
@@ -1984,11 +1985,11 @@ st.markdown("""
     /* AIアシスタントのテキスト吹き出し部分 */
     div[data-testid="stChatMessage"]:has(div[data-testid="stChatMessageAvatarAssistant"]) div[data-testid="stMarkdownContainer"],
     div[data-testid="stChatMessage"]:has(div[class*="assistant"]) div[data-testid="stMarkdownContainer"] {
-        background-color: #ffffff !important; /* 白色 */
+        background-color: #F0F2F6 !important; /* カスタム灰色 #20260414_李修正 */
         color: #333333 !important;
         padding: 10px 15px !important;
-        border-radius: 0px 12px 12px 12px !important; /* 左上を尖らせる */
-        border: 1px solid #e5e5e5 !important;
+        border-radius: 12px !important; /* 全て角丸にする #20260414_李修正 */
+        border: none !important; /* 枠線を削除 #20260414_李修正 */
         box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
         margin-left: 10px !important;
         margin-right: 50px !important;
