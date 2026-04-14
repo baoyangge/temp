@@ -1626,22 +1626,27 @@ with col_right:
                     font-weight: 500;
                     line-height: 1.2;
                 }
-                /* 【調整3】+/-ボタンのセンタリングと内部余白完全削除 #20260414_李修正 */
+                /* 【調整3】+/-ボタンの絶対配置（Absolute Centering）による強制中央揃え #20260414_李修正 */
                 div[data-testid="column"] button {
-                    padding: 0px !important;
-                    min-height: 0px !important;
-                    line-height: 1 !important;
-                    display: flex !important; 
-                    justify-content: center !important; 
-                    align-items: center !important; 
+                    position: relative !important;
+                    display: block !important;
+                    overflow: hidden !important;
+                    padding: 0 !important;
+                    min-height: 2em !important; /* ボタンが潰れないように最低高さを確保 */
                 }
-                /* ボタン内部のp, span, div要素のpaddingも強制削除 #20260414_李修正 */
+                /* ボタン内部のテキスト要素を完全に浮かせて中央に固定 #20260414_李修正 */
                 div[data-testid="column"] button p, 
                 div[data-testid="column"] button span, 
                 div[data-testid="column"] button div {
-                    padding: 0px !important;
-                    margin: 0px !important;
+                    position: absolute !important;
+                    top: 50% !important;
+                    left: 50% !important;
+                    transform: translate(-50%, -50%) !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
                     line-height: 1 !important;
+                    width: 100% !important;
+                    text-align: center !important;
                 }
                 /* 【調整4】「付加/なし」などのフォントサイズ #20260414_李修正 */
                 .adj-value {
