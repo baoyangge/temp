@@ -1611,22 +1611,31 @@ with col_right:
             st.markdown(
                 """
                 <style>
+                /* 【調整1】分類タグのフォントサイズ #20260414_李修正 */
                 .cat-badge {
                     background-color: #f0f2f6; 
                     padding: 4px 8px; 
-                    font-size: 0.8em; 
+                    font-size: 0.75em; 
                     font-weight: bold; 
                     border-radius: 2px;
                     display: inline-block;
                 }
+                /* 【調整2】特約名のフォントサイズ #20260414_李修正 */
                 .contract-name {
-                    font-size: 0.85em; 
+                    font-size: 0.8em; 
                     font-weight: 500;
                     line-height: 1.2;
                 }
-                .adj-btn {
-                    padding: 0 !important;
-                    margin: 0 !important;
+                /* 【調整3】+/-ボタンのセンタリングと余白削除 #20260414_李修正 */
+                div[data-testid="column"] button {
+                    padding: 0px !important;
+                    display: flex !important; 
+                    justify-content: center !important; 
+                    align-items: center !important; 
+                }
+                /* 【調整4】「付加/なし」などのフォントサイズ #20260414_李修正 */
+                .adj-value {
+                    font-size: 0.85em;
                 }
                 </style>
                 """, unsafe_allow_html=True
@@ -1688,7 +1697,7 @@ with col_right:
                             if is_toggle_type or current_val == -999:
                                 display_text = "なし" if current_val == -999 else "付加"
                                 color = "#ff4b4b" if current_val == -999 else "#29A383"
-                                st.markdown(f'<div style="text-align: center; margin-top: 6px; font-weight: bold; color: {color};">{display_text}</div>', unsafe_allow_html=True)
+                                st.markdown(f'<div class="adj-value" style="text-align: center; margin-top: 6px; font-weight: bold; color: {color};">{display_text}</div>', unsafe_allow_html=True)
                             else:
                                 new_val = st.number_input(
                                     "Amount", 
