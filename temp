@@ -1,10 +1,25 @@
-お疲れさまです
-こちらのお時間で設計・提案サポートPoCのレビューをお願いいたします
-よろしくお願いいたします
-________________________________________________________________________________
-Microsoft Teams 会議
-参加する:https://teams.microsoft.com/meet/46106876713919?p=2yqKVt1IZqZyK0ZVAh
-会議 ID:461 068 767 139 19
-パスコード:9vU9PL6h
-Teams で会議に参加する
+# プロセスを起動
+APP_PATH = "app.py"
+PORT = 10039
  
+ 
+cluster_id = spark.conf.get('spark.databricks.clusterUsageTags.clusterId')
+org_id = spark.conf.get('spark.databricks.clusterUsageTags.clusterOwnerOrgId')
+workspace_url = spark.conf.get('spark.databricks.workspaceUrl')
+PROXY_PREFIX = f'driver-proxy/o/{org_id}/{cluster_id}/{PORT}/'
+print(f'Access here: https://{workspace_url}/{PROXY_PREFIX}')
+ 
+proc = subprocess.Popen(
+    [
+        sys.executable, '-m', 'streamlit', 'run', APP_PATH,
+        '--server.address=0.0.0.0',
+        f'--server.port={PORT}',
+        '--server.headless=true',
+        '--browser.gatherUsageStats=false',
+        '--server.enableCORS=false',
+        '--server.enableXsrfProtection=false'
+    ],
+    stdout=subprocess.PIPE,
+    stderr=subprocess.STDOUT,
+    text=True,
+)
