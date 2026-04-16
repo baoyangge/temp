@@ -2440,6 +2440,15 @@ st.markdown("""
     div[data-testid="stChatMessage"]:has(div[data-testid="stChatMessageAvatarAssistant"]),
     div[data-testid="stChatMessage"]:has(div[class*="assistant"]) {
         flex-direction: row !important; /* アバターを左に配置 */
+        max-width: fit-content !important;  /* ★追加：幅を内容に合わせる */
+    }
+    
+    /* ★追加：AIアシスタントのメッセージ親コンテナを左寄せ（Streamlit 1.38対応） #20260416_李修正 */
+    div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stChatMessageAvatarAssistant"]),
+    div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stChatMessage"] div[class*="assistant"]) {
+        display: flex !important;
+        justify-content: flex-start !important;
+        width: 100% !important;
     }
 
     /* AIアシスタントのテキスト吹き出し部分 */
