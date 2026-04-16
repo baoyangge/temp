@@ -1681,21 +1681,20 @@ st.markdown("""
         max-width: 85%;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     }
+    /* Streamlitデフォルトのアシスタントアイコンに合わせる #20260416_李修正 */
     .processing-bubble .ai-icon {
         width: 32px;
         height: 32px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #29A383 0%, #1a7a5c 100%);
         display: flex;
         align-items: center;
         justify-content: center;
         margin-right: 12px;
         flex-shrink: 0;
     }
-    .processing-bubble .ai-icon-text {
-        color: white;
-        font-size: 14px;
-        font-weight: 600;
+    .processing-bubble .ai-icon svg {
+        width: 24px;
+        height: 24px;
+        fill: currentColor;
     }
     .processing-bubble .spinner {
         width: 18px;
@@ -2311,8 +2310,9 @@ with col_chat:
             st.markdown(f"""
             <div class="processing-bubble">
                 <div class="processing-bubble-content">
-                    <div class="ai-icon">
-                        <span class="ai-icon-text">AI</span>
+                    <!-- StreamlitデフォルトのロボットアイコンをSVGで埋め込む #20260416_李修正 -->
+                    <div class="ai-icon" style="background-color: transparent;">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="currentColor" xmlns="http://www.w3.org/2000/svg" color="inherit" class="eyeqlp51 st-emotion-cache-121nsya ex0cdyw0"><path fill="none" d="M0 0h24v24H0V0z"></path><path d="M21 10.42V6c0-1.1-.9-2-2-2h-3V2h-2v2h-4V2H8v2H5c-1.1 0-2 .9-2 2v4.42c-1.21.41-2 1.54-2 2.58 0 1.66 1.34 3 3 3v2c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-2c1.66 0 3-1.34 3-3 0-1.04-.79-2.17-2-2.58zM8 12c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm8 0c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z" fill="currentColor"></path></svg>
                     </div>
                     <div class="spinner"></div>
                     <div class="processing-text">{st.session_state.processing_message}</div>
