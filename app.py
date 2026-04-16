@@ -2414,12 +2414,18 @@ st.markdown("""
         max-width: fit-content !important;  /* ★追加：幅を内容に合わせる */
     }
     
-    /* ★追加：ユーザーメッセージの親コンテナを右寄せ #20260416_李修正 (Streamlit 1.38対応) */
+    /* ★修正：ユーザーメッセージの親コンテナを確実に右に押しやる #20260416_李修正_v3 */
     div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stChatMessageAvatarUser"]),
     div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stChatMessage"]:has(div[class*="user"])) {
         display: flex !important;
         justify-content: flex-end !important;
         width: 100% !important;
+        margin-left: auto !important; /* コンテナ全体を右へ */
+    }
+    
+    /* 1.38.0 の仕様上、更に内側の div も右寄せする必要がある場合 */
+    div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stChatMessage"]:has(div[class*="user"])) > div {
+        margin-left: auto !important;
     }
 
     /* ユーザーのテキスト吹き出し部分 */
