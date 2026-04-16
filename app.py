@@ -2431,9 +2431,18 @@ st.markdown("""
         border-radius: 12px !important; /* 全て角丸にする #20260414_李修正 */
         box-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;
         margin-right: 10px !important;
-        margin-left: 50px !important;
+        margin-left: auto !important; /* ★修正：左側マージンを自動にして右に寄せる */
         display: inline-block !important;
         border: none !important; /* 破れや余計な枠線を防ぐ #20260414_李修正 */
+    }
+    
+    /* ユーザーのテキスト吹き出し部分の親要素（テキストコンテナ）も右寄せにする */
+    div[data-testid="stChatMessage"]:has(div[class*="user"]) div[data-testid="chatAvatarIcon-user"] + div,
+    div[data-testid="stChatMessage"]:has(div[class*="user"]) > div:nth-child(2) {
+        margin-left: auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-end !important;
     }
 
     /* AIアシスタントの発言（アシスタントアバターを持つメッセージ）*/
