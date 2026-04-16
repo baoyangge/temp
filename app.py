@@ -2414,8 +2414,9 @@ st.markdown("""
         max-width: fit-content !important;  /* ★追加：幅を内容に合わせる */
     }
     
-    /* ★追加：ユーザーメッセージの親コンテナを右寄せ */
-    div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stChatMessageAvatarUser"]) {
+    /* ★追加：ユーザーメッセージの親コンテナを右寄せ #20260416_李修正 (Streamlit 1.38対応) */
+    div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stChatMessageAvatarUser"]),
+    div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stChatMessage"]:has(div[class*="user"])) {
         display: flex !important;
         justify-content: flex-end !important;
         width: 100% !important;
