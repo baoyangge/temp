@@ -6,6 +6,8 @@ from typing import Dict, List, Optional, Tuple
 import plotly.graph_objects as go
 import re
 from datetime import datetime, date  #20240409
+import math
+import time
 
 from modules.utils import read_yaml
 from modules.get_persona_info import get_persona_info
@@ -19,7 +21,7 @@ from modules.types import (
     CoverageLevel
 )
 from my03_chat_with_lc import ChatWithLC, StatusFlg
-from my10_generate_people_like_you_talk import GeneratePeopleLikeYouTalk
+#from my10_generate_people_like_you_talk import GeneratePeopleLikeYouTalk
 
 #修正_20260409_岡田
 from enum import Enum
@@ -104,7 +106,33 @@ PLAN_TO_COVERAGE_LEVEL = {
     "梅": CoverageLevel.BASIC,
 }
 
+PLAN_TYPE_TO_COVERAGE_LEVEL = {
+    PlanType.MATSU: CoverageLevel.ENHANCED,
+    PlanType.TAKE: CoverageLevel.STANDARD,
+    PlanType.UME: CoverageLevel.BASIC,
+}
 
+#修正_20260414_岡田
+SPECIAL_CONTRACT_TO_COVERAGE_CATEGORY = {
+    "injury_illness_special_contracts": "ケガ・入院",
+    "cancer_special_contracts": "がん",
+    "circulatory_special_contracts": "循環器",
+    "severe_disease_special_contracts": "特定重度疾病",
+    "disability_special_contracts": "就業不能",
+    "health_promotion_special_contracts": "健康増進",
+    "death_special_contracts": "万一",
+}
+#修正_20260414_岡田
+
+RADAR_LABEL_COLOR_MAP = {
+    "万一": "#069EDB",
+    "特定重度疾病": "#F37932",
+    "健康増進": "#00A78E",
+    "がん": "#F05891",
+    "循環器": "#6C67AE",
+    "就業不能": "#6FBF54",
+}
+#修正_20260415岡田さん
 
 # ==============================================================================
 # 特約保険料表示用の定数
@@ -314,6 +342,16 @@ def initialize_session_state() -> None:
     if "radar_visible_categories" not in st.session_state:
         st.session_state.radar_visible_categories = None
 
+    #修正_20260414_岡田
+    # 保障額（特約のbenefit_amount_yenを合算）
+    if "coverage_amount_dict" not in st.session_state:
+        st.session_state.coverage_amount_dict = {}
+
+    # ドラフトプラン作成時の必要保障額（最大値計算用に固定）
+    if "initial_required_coverage_dict" not in st.session_state:
+        st.session_state.initial_required_coverage_dict = {}
+    #修正_20260414_岡田
+
     # 選択肢から選択された内容を表示するための変数 #20240409
     if "pending_input_display" not in st.session_state:  #20240409
         st.session_state.pending_input_display = ""  #20240409
@@ -376,6 +414,10 @@ def reset_conversation_state() -> None:
     st.session_state.response_answers = []
     # レーダーチャート表示項目もリセット
     st.session_state.radar_visible_categories = None
+    #修正_20260414_岡田
+    st.session_state.coverage_amount_dict = {}
+    st.session_state.initial_required_coverage_dict = {}
+    #修正_20260414_岡田
     st.session_state.pending_input_display = ""  
     #20240409
     st.session_state.pending_ai_request = None  #20260410 李修正　
@@ -459,11 +501,11 @@ def get_spinner_text(user_text: str) -> str:
    
     # 優先度1: 固定ボタン文言の完全一致
     button_text_mapping = {
-        "プランについて説明してください": "説明する内容を考えています",
-        "保障を手厚くする方針でプランを修正してください": "保障を手厚くする内容を検討中です",
-        "保険料を下げる方針でプランを修正してください": "保険料を下げる案を検討中です",
-        "お客さまへ向けた提案文章を作成してください": "提案文を作成中です...約1.5分かかりますので、少々お待ちください",
-        "保障内容について教えてください": "保障内容を確認中です",
+        "「プラン説明」カテゴリーについて詳しく説明してください": "説明する内容を考えています",
+        "「プラン修正」保障を手厚くする方針で修正してください": "保障を手厚くする内容を検討中です",
+        "「プラン修正」保険料を下げる方針で修正してください": "保険料を下げる案を検討中です",
+        "「提案文作成」お客さま向けの提案文を作成してください": "提案文を作成中です...約1.5分かかりますので、少々お待ちください",
+        "「プラン説明」プランの保障内容について詳しく説明ください": "保障内容を確認中です",
     }
    
     if text in button_text_mapping:
@@ -481,7 +523,7 @@ def get_spinner_text(user_text: str) -> str:
    
     # 「提案/文章」
     if any(kw in text for kw in ["提案", "文章"]):
-        return "提案文を作成中です。約30秒かかりますので、少々お待ちください。"
+        return "提案文を作成中です。約1分間かかりますので、少々お待ちください。"
    
     # 「説明/教えて」
     if any(kw in text for kw in ["説明", "教えて"]):
@@ -498,7 +540,7 @@ def get_spinner_text(user_text: str) -> str:
     stage_text_mapping = {
         WorkflowStage.PLAN_DETAIL.value: "説明する内容を考えています",
         WorkflowStage.PLAN_MODIFIED.value: "プランを修正しています",  # ★保障額変更時のみここで出力
-        WorkflowStage.PLAN_PROPOSED.value: "提案文を作成中です。約30秒かかりますので、少々お待ちください。",
+        WorkflowStage.PLAN_PROPOSED.value: "提案文を作成中です。約1.5分かかりますので、少々お待ちください。",
     }
    
     if current_stage_value in stage_text_mapping:
@@ -524,12 +566,12 @@ def get_workflow_progress_html() -> str:
     
     # ★ 順序: プラン修正 → プラン詳細説明
     stages = [
-        ("START", WorkflowStage.START.value),
+        ("ペルソナ選択", WorkflowStage.START.value),
         ("プラン作成", WorkflowStage.PLAN_CREATED.value),
         ("プラン修正", WorkflowStage.PLAN_MODIFIED.value),
-        ("プラン解説", WorkflowStage.PLAN_DETAIL.value),
+        ("プラン説明", WorkflowStage.PLAN_DETAIL.value),
         ("プラン提案", WorkflowStage.PLAN_PROPOSED.value),
-        ("END", WorkflowStage.END.value),
+        #mark0414li("END", WorkflowStage.END.value),
     ]
     
     stage_items = []
@@ -619,15 +661,195 @@ def determine_visible_categories() -> Optional[List]:
 
 
 
+    
+#20260415岡田修正
+# ==============================================================================
+# catalog変更検知関数（修正版：特約レベルの変更も検知）
+# ==============================================================================
+
+def get_catalog_id(catalog) -> Optional[str]:
+    """
+    catalogの識別子を生成する。
+    catalogの内容が変わったら異なるIDを返す。
+    ★ 特約レベルの benefit_amount_yen, premium_yen, benefit_amount_yen_for_kitei_check を含める
+    """
+    if catalog is None:
+        return None
+    
+    try:
+        id_parts = []
+        
+        # 特約カテゴリの属性名リスト
+        special_contract_attrs = [
+            "cancer_special_contracts",
+            "health_promotion_special_contracts",
+            "disability_special_contracts",
+            "circulatory_special_contracts",
+            "severe_disease_special_contracts",
+            "injury_illness_special_contracts",
+        ]
+        
+        for plan_type in [PlanType.MATSU, PlanType.TAKE, PlanType.UME]:
+            plan = catalog.get(plan_type)
+            if not plan:
+                continue
+            
+            plan_name = plan_type.value if hasattr(plan_type, 'value') else str(plan_type)
+            
+            # total_premium があれば使用
+            if hasattr(plan, 'total_premium') and plan.total_premium is not None:
+                id_parts.append(f"{plan_name}:total:{plan.total_premium}")
+            
+            # 各特約カテゴリを確認
+            for attr_name in special_contract_attrs:
+                contracts = getattr(plan, attr_name, None)
+                if not contracts or not isinstance(contracts, dict):
+                    continue
+                
+                for contract_type, contract_info in contracts.items():
+                    if contract_info is None:
+                        continue
+                    
+                    ct_name = contract_type.value if hasattr(contract_type, 'value') else str(contract_type)
+                    
+                    # ★ 3つの値すべてを識別子に含める
+                    benefit = getattr(contract_info, 'benefit_amount_yen', 0) or 0
+                    premium = getattr(contract_info, 'premium_yen', 0) or 0
+                    kitei = getattr(contract_info, 'benefit_amount_yen_for_kitei_check', 0) or 0
+                    
+                    id_parts.append(f"{plan_name}:{ct_name}:b{benefit}:p{premium}:k{kitei}")
+        
+        if id_parts:
+            return "|".join(id_parts)
+        
+        # フォールバック：オブジェクトのidを使用
+        return str(id(catalog))
+    
+    except Exception as e:
+        add_debug_log(f"get_catalog_id error: {e}")
+        return str(id(catalog))
+
+def is_catalog_changed(new_catalog) -> bool:
+    """
+    catalogが前回から変更されたかどうかを判定する。
+    """
+    new_id = get_catalog_id(new_catalog)
+    previous_id = st.session_state.get("previous_catalog_id")
+    
+    add_debug_log(f"is_catalog_changed: new_id length={len(new_id) if new_id else 0}")
+    add_debug_log(f"is_catalog_changed: previous_id length={len(previous_id) if previous_id else 0}")
+    add_debug_log(f"is_catalog_changed: changed={new_id != previous_id}")
+    
+    # 前回がNoneで今回も有効なcatalogがない場合は変更なし
+    if previous_id is None and new_id is None:
+        return False
+    
+    # 前回がNoneで今回は有効なcatalogがある場合は変更あり
+    if previous_id is None and new_id is not None:
+        return True
+    
+    # IDが異なれば変更あり
+    return new_id != previous_id
+
+
+def update_catalog_id(catalog) -> None:
+    """
+    catalogの識別子を更新する。
+    """
+    st.session_state.previous_catalog_id = get_catalog_id(catalog)
+    add_debug_log(f"update_catalog_id: updated (length={len(st.session_state.previous_catalog_id) if st.session_state.previous_catalog_id else 0})")
+#20260415岡田修正
+
+# ==============================================================================
+# catalogから保障額を計算する関数（デバッグ情報付き）
+# ==============================================================================
+
+
+#20260415岡田
+def calculate_coverage_amount_from_catalog() -> Dict:
+    """
+    catalogの各特約のbenefit_amount_yenを合算して保障額を計算する
+    ★ カテゴリ名の部分一致も考慮
+    
+    Returns:
+        各CoverageLevelごとのカテゴリ別保障額の辞書
+    """
+    catalog = st.session_state.catalog
+    if not catalog:
+        add_debug_log("calculate_coverage: catalog is None")
+        return {}
+    
+    result = {}
+    
+    for plan_type, coverage_level in PLAN_TYPE_TO_COVERAGE_LEVEL.items():
+        plan = catalog.get(plan_type)
+        if not plan:
+            continue
+        
+        # 必要保障額のカテゴリを基準に保障額を計算
+        required_coverage = st.session_state.required_coverage_amount_dict.get(coverage_level, {})
+        
+        # カテゴリ名とカテゴリオブジェクトのマッピングを作成
+        category_name_to_obj = {
+            (category.value if hasattr(category, 'value') else str(category)): category
+            for category in required_coverage.keys()
+        }
+        
+        category_totals = {cat: 0 for cat in required_coverage.keys()}
+        
+        # 各特約カテゴリから保障額を合算
+        for attr_name, coverage_category_name in SPECIAL_CONTRACT_TO_COVERAGE_CATEGORY.items():
+            contracts = getattr(plan, attr_name, None)
+            
+            if not contracts:
+                continue
+            
+            # カテゴリオブジェクトを検索（完全一致または部分一致）
+            target_category = category_name_to_obj.get(coverage_category_name)
+            
+            if not target_category:
+                for cat_name, cat_obj in category_name_to_obj.items():
+                    if coverage_category_name in cat_name or cat_name in coverage_category_name:
+                        target_category = cat_obj
+                        break
+            
+            if not target_category:
+                continue
+            
+            if isinstance(contracts, dict):
+                for contract_type, contract_info in contracts.items():
+                    if contract_info is None:
+                        continue
+                    
+                    # benefit_amount_yen の取得
+                    benefit_amount = 0
+                    if hasattr(contract_info, 'benefit_amount_yen'):
+                        benefit_amount = contract_info.benefit_amount_yen or 0
+                    elif isinstance(contract_info, dict) and 'benefit_amount_yen' in contract_info:
+                        benefit_amount = contract_info.get('benefit_amount_yen', 0) or 0
+                    
+                    category_totals[target_category] += benefit_amount
+        
+        result[coverage_level] = category_totals
+    
+    return result
+#20260415岡田
+
+
+
+
 # ==============================================================================
 # catalog から保障額を同期する関数
 
 # ==============================================================================
+#修正_20260414_岡田
 def sync_coverage_dict_from_catalog() -> None:
     """
     catalog の Plan.coverage_amount_by_category があれば、
     required_coverage_amount_dict を catalog の値で同期（上書き）する。
-    また、初回のみレーダーチャートに表示する項目を決定する。
+    また、初回のみレーダーチャートに表示する項目を決定し、
+    初回の必要保障額を最大値計算用に保存する。
+    さらに、保障額も計算して同期する。
     """
     catalog = st.session_state.catalog
     if not catalog:
@@ -651,7 +873,16 @@ def sync_coverage_dict_from_catalog() -> None:
     # 初回のみ表示項目を決定（まだ設定されていない場合のみ）
     if st.session_state.radar_visible_categories is None:
         st.session_state.radar_visible_categories = determine_visible_categories()
-
+    
+    # 初回のみ最大値計算用の必要保障額を保存
+    if not st.session_state.initial_required_coverage_dict and updated_dict:
+        st.session_state.initial_required_coverage_dict = {
+            level: dict(data) for level, data in updated_dict.items()
+        }
+    
+    # 保障額を計算して同期
+    st.session_state.coverage_amount_dict = calculate_coverage_amount_from_catalog()
+#修正_20260414_岡田
 
 
 
@@ -660,14 +891,29 @@ def sync_coverage_dict_from_catalog() -> None:
 
 # ==============================================================================
 
+# 20260416岡田修正
 def create_coverage_radar_chart(plan_name: str) -> go.Figure:
-    coverage_dict = st.session_state.required_coverage_amount_dict
-    # 表示する項目のリストを取得
+    """
+    必要保障額と保障額の2系列を表示するレーダーチャートを作成
+    - 凡例：左上
+    - ラベル：カスタムアノテーションで表示（項目名は色付き、金額は黒）
+    - レーダー本体：できるだけ大きく
+    - 必要保障額：薄いグレー（破線）
+    - 保障額：プラン色（実線）
+    - 100%基準：真円（25%単位でグリッド線を表示）
+    """
+    
+    required_coverage_dict = st.session_state.required_coverage_amount_dict
+    coverage_dict = st.session_state.coverage_amount_dict
     visible_categories = st.session_state.radar_visible_categories
 
-    if not coverage_dict:
+    CHART_HEIGHT = 650
+    CHART_MARGIN = dict(l=10, r=10, t=10, b=10)
+
+    if not required_coverage_dict:
         fig = go.Figure()
         fig.add_annotation(
+            text="データがありません",
             xref="paper", yref="paper",
             x=0.5, y=0.5,
             showarrow=False,
@@ -675,16 +921,15 @@ def create_coverage_radar_chart(plan_name: str) -> go.Figure:
             align="center"
         )
         fig.update_layout(
-            height=280,
-            margin=dict(l=20, r=20, t=20, b=20),
-            paper_bgcolor='#ffffff',
-            plot_bgcolor='#ffffff'
+            height=CHART_HEIGHT,
+            margin=CHART_MARGIN,
+            paper_bgcolor="#ffffff",
+            plot_bgcolor="#ffffff"
         )
         return fig
 
     coverage_level = PLAN_TO_COVERAGE_LEVEL.get(plan_name)
-
-    if coverage_level is None or coverage_level not in coverage_dict:
+    if coverage_level is None or coverage_level not in required_coverage_dict:
         fig = go.Figure()
         fig.add_annotation(
             text=f"{plan_name}プランのデータがありません",
@@ -695,32 +940,41 @@ def create_coverage_radar_chart(plan_name: str) -> go.Figure:
             align="center"
         )
         fig.update_layout(
-            height=280,
-            margin=dict(l=20, r=20, t=20, b=20),
-            paper_bgcolor='#ffffff',
-            plot_bgcolor='#ffffff'
+            height=CHART_HEIGHT,
+            margin=CHART_MARGIN,
+            paper_bgcolor="#ffffff",
+            plot_bgcolor="#ffffff"
         )
         return fig
 
-    plan_data = coverage_dict[coverage_level]
+    required_plan_data = required_coverage_dict[coverage_level]
+    coverage_plan_data = coverage_dict.get(coverage_level, {})
 
     base_labels: List[str] = []
-    values_yen: List[float] = []
-    values_man: List[float] = []
+    required_values_yen: List[float] = []
+    required_values_man: List[float] = []
+    coverage_values_yen: List[float] = []
+    coverage_values_man: List[float] = []
+    max_values: List[float] = []
 
-    for category, amount in plan_data.items():
-        # 表示項目が設定されている場合、その項目のみ表示
+    for category, amount in required_plan_data.items():
         if visible_categories is not None and category not in visible_categories:
             continue
-        
+
         label = category.value if hasattr(category, "value") else str(category)
         base_labels.append(label)
 
-        amt = float(amount or 0)
-        values_yen.append(amt)
-        values_man.append(amt / 10000.0)
+        required_amt = float(amount or 0)
+        required_values_yen.append(required_amt)
+        required_values_man.append(required_amt / 10000.0)
 
-    # 表示する項目がない場合のハンドリング
+        coverage_amt = float(coverage_plan_data.get(category, 0) or 0)
+        coverage_values_yen.append(coverage_amt)
+        coverage_values_man.append(coverage_amt / 10000.0)
+
+        max_amt = required_amt
+        max_values.append(max_amt if max_amt > 0 else 1)
+
     if not base_labels:
         fig = go.Figure()
         fig.add_annotation(
@@ -732,79 +986,146 @@ def create_coverage_radar_chart(plan_name: str) -> go.Figure:
             align="center"
         )
         fig.update_layout(
-            height=280,
-            margin=dict(l=20, r=20, t=20, b=20),
-            paper_bgcolor='#ffffff',
-            plot_bgcolor='#ffffff'
+            height=CHART_HEIGHT,
+            margin=CHART_MARGIN,
+            paper_bgcolor="#ffffff",
+            plot_bgcolor="#ffffff"
         )
         return fig
 
-    theta_labels = [f"{lbl}<br>{man:,.0f}万円" for lbl, man in zip(base_labels, values_man)]
+    normalized_required = [(v / mv) * 100 if mv > 0 else 0 for v, mv in zip(required_values_yen, max_values)]
+    normalized_coverage = [(v / mv) * 100 if mv > 0 else 0 for v, mv in zip(coverage_values_yen, max_values)]
 
-    # 松プランの最大値計算もフィルタリングを適用
-    if CoverageLevel.ENHANCED in coverage_dict:
-        max_plan_data = coverage_dict[CoverageLevel.ENHANCED]
-        max_values = []
-        for category, amount in plan_data.items():
-            # 表示項目のみを対象とする
-            if visible_categories is not None and category not in visible_categories:
-                continue
-            max_values.append(float(max_plan_data.get(category, 1) or 0))
-        normalized_values = [
-            (v / mv) * 100 if mv > 0 else 0
-            for v, mv in zip(values_yen, max_values)
-        ]
-    else:
-        max_val = max(values_yen) if values_yen and max(values_yen) > 0 else 1
-        normalized_values = [(v / max_val) * 100 for v in values_yen]
+    # ★ theta用ラベル（アノテーションで別途表示するため、シンプルなラベルを使用）
+    theta_closed = base_labels + [base_labels[0]]
+    normalized_required_closed = normalized_required + [normalized_required[0]]
+    normalized_coverage_closed = normalized_coverage + [normalized_coverage[0]]
 
-    theta_closed = theta_labels + [theta_labels[0]]
-    normalized_closed = normalized_values + [normalized_values[0]]
-    values_man_closed = values_man + [values_man[0]]
+    required_fill_color = "rgba(180, 180, 180, 0.2)"
+    required_line_color = "#aaaaaa"
+    
+    grid_line_color = "rgba(200, 200, 200, 0.5)"
 
-    plan_colors = {
-        "松": {"fill": "rgba(41, 163, 131, 0.25)", "line": "#29A383"},
-        "竹": {"fill": "rgba(250, 191, 0, 0.25)", "line": "#FABF00"},
-        "梅": {"fill": "rgba(102, 126, 234, 0.25)", "line": "#667eea"},
+    coverage_colors = {
+        "松": {"fill": "rgba(41, 163, 131, 0.4)", "line": "#29A383"},
+        "竹": {"fill": "rgba(250, 191, 0, 0.4)", "line": "#FABF00"},
+        "梅": {"fill": "rgba(102, 126, 234, 0.4)", "line": "#667eea"},
     }
-    color_config = plan_colors.get(plan_name, plan_colors["松"])
+    coverage_config = coverage_colors.get(plan_name, coverage_colors["松"])
 
     fig = go.Figure()
+
     fig.add_trace(go.Scatterpolar(
-        r=normalized_closed,
+        r=normalized_required_closed,
         theta=theta_closed,
         fill="toself",
-        fillcolor=color_config["fill"],
-        line=dict(color=color_config["line"], width=2),
-        name=f"{plan_name}プラン",
-        hovertemplate="%{theta}<br>保障額: %{customdata:,.0f}万円<br>松プラン比: %{r:.1f}%<extra></extra>",
-        customdata=values_man_closed
+        fillcolor=required_fill_color,
+        line=dict(color=required_line_color, width=2, dash="dash"),
+        name="必要保障額",
+        hovertemplate="%{theta}<br>充足率: %{r:.1f}%<extra></extra>",
     ))
+
+    fig.add_trace(go.Scatterpolar(
+        r=normalized_coverage_closed,
+        theta=theta_closed,
+        fill="toself",
+        fillcolor=coverage_config["fill"],
+        line=dict(color=coverage_config["line"], width=2),
+        name="保障額",
+        hovertemplate="%{theta}<br>充足率: %{r:.1f}%<extra></extra>",
+    ))
+
+    # ★ polarチャートのドメイン設定
+    domain_x = [0.02, 0.98]
+    domain_y = [0.10, 0.98]
 
     fig.update_layout(
         polar=dict(
+            domain=dict(x=domain_x, y=domain_y),
             radialaxis=dict(
                 visible=True,
-                range=[0, 100],
-                tickvals=[0, 25, 50, 75, 100],
-                ticktext=["0%", "25%", "50%", "75%", "100%"],
-                tickfont=dict(size=11, color="#666666"),  #20240409 9から11に変更
-                gridcolor="#e9ecef",
+                range=[0, 150],
+                tickvals=[25, 50, 75, 100],
+                ticktext=["25%", "50%", "75%", "100%"],
+                showgrid=True,
+                gridcolor=grid_line_color,
+                gridwidth=1,
+                showticklabels=True,
+                tickfont=dict(size=10, color="#888888"),
+                showline=False,
             ),
             angularaxis=dict(
-                tickfont=dict(size=13, color="#333333", family="Arial Black"),  #20240409 10から13に変更、フォントを太字に
-                gridcolor="#e9ecef",
+                showticklabels=False,  # ★ デフォルトラベルを非表示（アノテーションで表示）
+                showgrid=False,
+                showline=False,
             ),
             bgcolor="#ffffff",
         ),
-        showlegend=False,
-        height=320,  #20240409 280から320に変更（文字が大きくなった分、高さも調整）
-        margin=dict(l=60, r=60, t=40, b=40),  #20240409 マージンを調整
+        showlegend=True,
+        legend=dict(
+            orientation="h",
+            x=0.01, xanchor="left",
+            y=0.99, yanchor="top",
+            font=dict(size=14),
+            bgcolor="rgba(255,255,255,0.0)",
+        ),
+        height=CHART_HEIGHT,
+        margin=CHART_MARGIN,
         paper_bgcolor="#ffffff",
         plot_bgcolor="#ffffff",
     )
 
+    # ★ カスタムラベルをアノテーションとして追加（項目名は色付き、金額は黒）
+    center_x = (domain_x[0] + domain_x[1]) / 2
+    center_y = (domain_y[0] + domain_y[1]) / 2
+    
+    # ラベルを配置する半径係数（チャートの外側に配置）
+    label_radius = 0.48
+    
+    n_categories = len(base_labels)
+    for i, (label, req, cov) in enumerate(zip(base_labels, required_values_man, coverage_values_man)):
+        # 角度を計算（90度から開始、時計回り）
+        angle_deg = 90 - (360 / n_categories) * i
+        angle_rad = math.radians(angle_deg)
+        
+        # ★ ラベルの色を取得（マッピングにない場合はデフォルト色）
+        label_color = RADAR_LABEL_COLOR_MAP.get(label, "#333333")
+        
+        # 位置を計算
+        x_pos = center_x + label_radius * math.cos(angle_rad)
+        y_pos = center_y + label_radius * math.sin(angle_rad)
+        
+        # ★ カテゴリ名のアノテーション（色付き、上側）
+        fig.add_annotation(
+            x=x_pos,
+            y=y_pos,
+            xref="paper",
+            yref="paper",
+            text=f"<b>{label}</b>",
+            showarrow=False,
+            font=dict(size=14, color=label_color),
+            align="center",
+            yshift=24,
+        )
+        
+        # ★ 金額のアノテーション（現行色：黒、下側）
+        fig.add_annotation(
+            x=x_pos,
+            y=y_pos,
+            xref="paper",
+            yref="paper",
+            text=f"必要:{req:,.0f}万<br>保障:{cov:,.0f}万",
+            showarrow=False,
+            font=dict(size=12, color="#333333"),
+            align="center",
+            yshift=-8,
+        )
+
     return fig
+# 20260416岡田修正
+
+
+
 
 
 def get_coverage_data_with_categories(plan_name: str) -> List[Tuple]:
@@ -1078,6 +1399,21 @@ def call_chat_api(user_message: str) -> str:
         required_coverage_amount_dict
     )
 
+
+
+    sync_coverage_dict_from_catalog()
+    '''
+    # ★ catalogが変更された場合のみ、保障額を同期
+    if catalog_changed:
+        add_debug_log("call_chat_api: catalog changed, syncing coverage dict")
+        t7 = time.perf_counter()
+        sync_coverage_dict_from_catalog()
+        update_catalog_id(catalog)
+        t8 = time.perf_counter()
+        add_debug_log(f"[T] sync_coverage+update_catalog_id: {(t8 - t7):.3f}s")
+    else:
+        add_debug_log("call_chat_api: catalog not changed, skip sync")
+    '''
     
     st.session_state.response = response
     st.session_state.catalog = catalog
@@ -1173,16 +1509,17 @@ def generate_ply_proposal(plan_type: PlanType = PlanType.TAKE) -> str:
         return f"⚠️ {plan_name}プランが設定されていないため、提案文を生成できません。"
     
     try:
-        ply_generator = GeneratePeopleLikeYouTalk(plan, persona_info)
-        explanation_ply, customer_cluster, special_contract_cluster = ply_generator.run()
+        #ply_generator = GeneratePeopleLikeYouTalk(plan, persona_info)
+        explanation_ply = "固定文言"
+        #explanation_ply, customer_cluster, special_contract_cluster = ply_generator.run()
         
-        st.session_state.ply_explanation = explanation_ply
-        st.session_state.customer_cluster = customer_cluster
-        st.session_state.special_contract_cluster = special_contract_cluster
+        #st.session_state.ply_explanation = explanation_ply
+        #st.session_state.customer_cluster = customer_cluster
+        #st.session_state.special_contract_cluster = special_contract_cluster
         
         #修正_20260409_岡田
         # PLY生成完了後、ワークフローを完了状態に更新
-        update_workflow_stage("end")
+        #update_workflow_stage("end")
         #修正_20260409_岡田
         
         return explanation_ply
@@ -1247,6 +1584,7 @@ st.markdown("""
     .st-emotion-cache-z5fcl4 {
         padding-top: 70px !important;
         padding-left: 10px !important;
+         padding-right: 20px !important;
     }
     st-emotion-cache-1j22a0y {
         padding-top: 30px !important;
@@ -1262,7 +1600,7 @@ st.markdown("""
     [data-testid="stSidebar"] { position: relative !important; height: 100vh !important; background-color: #f8f9fa; border-right: 1px solid #e9ecef; } /* #20260410 李修正　幅と表示の強制を解除 */
     [data-testid="stSidebar"] > div:first-child { position: relative !important; height: 100vh !important; overflow-y: auto !important; }
     [data-testid="stSidebarContent"] { overflow-y: auto !important; height: 100% !important; }
-    .main .block-container { padding-top: 70px !important; padding-bottom: 1rem !important; padding-left: 0.25rem !important; padding-right: 1rem !important; max-width: 100% !important; }
+    .main .block-container { padding-top: 40px !important; padding-bottom: 1rem !important; padding-left: 0.25rem !important; padding-right: 0.3rem !important; max-width: 100% !important; }
     header[data-testid="stHeader"] { background: transparent !important; height: 0 !important; min-height: 0 !important; overflow: visible !important; }  #20260410 李修正　ヘッダーの余白を削除しつつ、中にある開閉ボタンは隠さない
     [data-testid="collapsedControl"] { display: flex !important; z-index: 100000 !important; } /* #20260410 李修正　展開ボタンの強制表示（旧バージョン） */
     [data-testid="stSidebarCollapsedControl"] { display: flex !important; z-index: 100000 !important; } /* #20260410 李修正　展開ボタンの強制表示（新バージョン） */
@@ -1417,6 +1755,7 @@ gender = current_row.iloc[2]
 birth_date = current_row.iloc[4]
 has_spouse = current_row.iloc[12]
 num_children = current_row.iloc[20]
+budget_personal = current_row.iloc[43]
 
 num_children_int = int(num_children) if pd.notna(num_children) else 0
 family_count = 1
@@ -1477,6 +1816,7 @@ with st.sidebar:
     <tr><td class="label">配偶者</td><td class="value">{spouse_display}</td></tr>
     <tr><td class="label">子供人数</td><td class="value">{num_children_int}人</td></tr>
     <tr class="highlight-row"><td class="label">家族人数（計）</td><td class="value highlight-value">{family_count}人</td></tr>
+    <tr class="highlight-row"><td class="label">ご予算</td><td class="value highlight-value">{budget_personal}円</td></tr>
     </table></div>
     """, unsafe_allow_html=True)  #20240409
     st.divider()
@@ -1533,26 +1873,26 @@ with col_right:
         </style>
         """, unsafe_allow_html=True
     )
-    #0414李修正st.subheader("必要保障額")
+    st.subheader("必要保障額カバー範囲")
     
     # プラン選択ボタン
     plan_col1, plan_col2, plan_col3 = st.columns(3)
     
     with plan_col1:
         matsu_type = "primary" if st.session_state.selected_radar_plan == "松" else "secondary"
-        if st.button("🥇 松", key="radar_plan_matsu", use_container_width=True, type=matsu_type):
+        if st.button("松\n(最大限保障)", key="radar_plan_matsu", use_container_width=True, type=matsu_type):
             st.session_state.selected_radar_plan = "松"
             st.rerun()
     
     with plan_col2:
         take_type = "primary" if st.session_state.selected_radar_plan == "竹" else "secondary"
-        if st.button("🥈 竹", key="radar_plan_take", use_container_width=True, type=take_type):
+        if st.button("竹\n(ご意向反映)", key="radar_plan_take", use_container_width=True, type=take_type):
             st.session_state.selected_radar_plan = "竹"
             st.rerun()
     
     with plan_col3:
         ume_type = "primary" if st.session_state.selected_radar_plan == "梅" else "secondary"
-        if st.button("🥉 梅", key="radar_plan_ume", use_container_width=True, type=ume_type):
+        if st.button("梅\n(予算反映)", key="radar_plan_ume", use_container_width=True, type=ume_type):
             st.session_state.selected_radar_plan = "梅"
             st.rerun()
     
@@ -1586,10 +1926,127 @@ with col_right:
     has_catalog = st.session_state.catalog is not None
     
     if has_catalog:
+    
+        # ダイアログ表示フラグの初期化
+        if "show_numpad_dialog" not in st.session_state:
+            st.session_state.show_numpad_dialog = False
+        if "numpad_input" not in st.session_state:
+            st.session_state.numpad_input = ""
+        if "numpad_confirmed" not in st.session_state:
+            st.session_state.numpad_confirmed = False
+        
+        def format_yen_to_man(yen_value):
+            """円を万円表示に変換（例: 5000 → 0.5万円, 10000 → 1万円, 15000 → 1.5万円）"""
+            if yen_value <= 0 or yen_value == -999:
+                return "なし"
+            man = yen_value / 10000
+            if man == int(man):
+                return f"{int(man)}万円"
+            else:
+                return f"{man:.1f}万円"
+        
+        # テンキー入力ダイアログ
+        @st.dialog("金額を入力（千円単位）", width="small")
+        def show_numpad_dialog():
+            state_key = st.session_state.editing_state_key
+            
+            # テンキー部分をfragmentで囲む（部分更新）
+            @st.fragment
+            def numpad_fragment():
+                # 入力値（千円単位の数値）
+                input_val = st.session_state.numpad_input if st.session_state.numpad_input else "0"
+                try:
+                    thousand_units = int(input_val)
+                    yen_value = thousand_units * 1000
+                    # ●●●,000円 形式で表示
+                    formatted_val = f"{yen_value:,}"
+                except:
+                    formatted_val = "0"
+                
+                st.markdown(
+                    f"""
+                    <div style="text-align: center; font-size: 2em; font-weight: bold; 
+                                background-color: #f0f2f6; padding: 16px; border-radius: 8px; 
+                                margin-bottom: 16px; font-family: monospace;">
+                        {formatted_val} <span style="font-size: 0.6em;">円</span>
+                    </div>
+                    """, 
+                    unsafe_allow_html=True
+                )
+                
+                # テンキーレイアウト
+                numpad_layout = [
+                    ["7", "8", "9"],
+                    ["4", "5", "6"],
+                    ["1", "2", "3"],
+                    ["C", "0", "⌫"]
+                ]
+                
+                for row_idx, row in enumerate(numpad_layout):
+                    cols = st.columns(3, gap="small")
+                    for i, key in enumerate(row):
+                        with cols[i]:
+                            # Cボタンは赤系の色で目立たせる
+                            if key == "C":
+                                st.markdown(
+                                    """
+                                    <style>
+                                    div[data-testid="stButton"]:has(button[kind="secondary"]) button:contains("C") {
+                                        background-color: #ff6b6b;
+                                        color: white;
+                                    }
+                                    </style>
+                                    """, unsafe_allow_html=True
+                                )
+                                if st.button("🔄 クリア", use_container_width=True, key=f"numpad_{row_idx}_{i}", type="primary"):
+                                    st.session_state.numpad_input = ""
+                                    st.rerun(scope="fragment")
+                            elif key == "⌫":
+                                if st.button(key, use_container_width=True, key=f"numpad_{row_idx}_{i}"):
+                                    st.session_state.numpad_input = st.session_state.numpad_input[:-1]
+                                    st.rerun(scope="fragment")
+                            else:
+                                if st.button(key, use_container_width=True, key=f"numpad_{row_idx}_{i}"):
+                                    # 最大4桁（9999千円 = 約1000万円）まで
+                                    if len(st.session_state.numpad_input) < 4:
+                                        st.session_state.numpad_input += key
+                                    st.rerun(scope="fragment")
+            
+            # フラグメント実行
+            numpad_fragment()
+            
+            st.markdown("---")
+            
+            # 確定・キャンセルボタン（2ボタン構成）
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                if st.button("✕ キャンセル", use_container_width=True, type="secondary"):
+                    st.session_state.show_numpad_dialog = False
+                    st.session_state.numpad_input = ""
+                    st.rerun()
+            
+            with col2:
+                if st.button("✓ 確定", use_container_width=True, type="primary"):
+                    try:
+                        thousand_units = int(st.session_state.numpad_input) if st.session_state.numpad_input else 0
+                        val = thousand_units * 1000  # 千円単位 → 円に変換
+                    except:
+                        val = 0
+                    st.session_state[st.session_state.editing_state_key] = val if val > 0 else -999
+                    st.session_state.show_numpad_dialog = False
+                    st.session_state.numpad_input = ""
+                    st.session_state.numpad_confirmed = True
+                    st.rerun()
+        
+        # ダイアログ表示（フラグがTrueの場合）
+        if st.session_state.show_numpad_dialog:
+            show_numpad_dialog()
+        
         if st.button("全プラン詳細確認", key="special_contract_btn", use_container_width=True, type="secondary"):
             show_special_contract_premium_dialog()
-            
-        #0414李修正 st.markdown(f"**詳細調整 ({st.session_state.selected_radar_plan}プラン)**")
+                
+        st.markdown(f"**詳細調整 ({st.session_state.selected_radar_plan}プラン)**")
         
         CATEGORY_ABBR = {
             "病気・ケガへの備え": "病気",
@@ -1611,55 +2068,18 @@ with col_right:
             st.markdown(
                 """
                 <style>
-                /* 【調整1】分類タグのフォントサイズ #20260414_李修正 */
                 .cat-badge {
                     background-color: #f0f2f6; 
                     padding: 4px 8px; 
-                    font-size: 0.75em; 
+                    font-size: 0.8em; 
                     font-weight: bold; 
                     border-radius: 2px;
                     display: inline-block;
                 }
-                /* 【調整2】特約名のフォントサイズ #20260414_李修正 */
                 .contract-name {
-                    font-size: 0.8em; 
+                    font-size: 0.85em; 
                     font-weight: 500;
                     line-height: 1.2;
-                }
-                /* 【調整3】+/-ボタンの絶対配置（Absolute Centering）による強制中央揃え #20260414_李修正_v2 */
-                /* ボタンの親コンテナから全てのマージン/パディングをリセット */
-                div[data-testid="column"] > div > div > div > div > button {
-                    position: relative !important;
-                    display: block !important;
-                    overflow: hidden !important;
-                    padding: 0 !important;
-                    margin: 0 !important;
-                    min-height: 2.2em !important; 
-                    box-sizing: border-box !important;
-                }
-                /* ボタン内部のテキスト要素を完全に浮かせて中央に固定 */
-                div[data-testid="column"] button p, 
-                div[data-testid="column"] button span, 
-                div[data-testid="column"] button div {
-                    position: absolute !important;
-                    top: 50% !important;
-                    left: 50% !important;
-                    transform: translate(-50%, -50%) !important;
-                    margin: 0 !important;
-                    padding: 0 !important;
-                    line-height: 1 !important;
-                    width: 100% !important;
-                    text-align: center !important;
-                    box-sizing: border-box !important;
-                }
-                /* Streamlit内部の特定ハッシュクラスのpaddingを上書き（再挑戦） */
-                div[data-testid="column"] button * {
-                    padding-right: 0px !important;
-                    margin-right: 0px !important;
-                }
-                /* 【調整4】「付加/なし」などのフォントサイズ #20260414_李修正 */
-                .adj-value {
-                    font-size: 0.85em;
                 }
                 </style>
                 """, unsafe_allow_html=True
@@ -1699,7 +2119,11 @@ with col_right:
                         current_val = st.session_state[state_key]
                         is_toggle_type = (st.session_state[orig_state_key] == 0)
                         
-                        c1, c2, c3, c4, c5 = st.columns([1.5, 3.5, 1, 2.5, 1])
+                        # session_stateの値をcontract_infoに反映
+                        contract_info.benefit_amount_yen = current_val
+                        
+                        # カラムレイアウト
+                        c1, c2, c3 = st.columns([1.5, 5, 3])
                         
                         with c1:
                             st.markdown(f'<div class="cat-badge" style="border-left: 4px solid {badge_color}; margin-top: 6px;">{abbr}</div>', unsafe_allow_html=True)
@@ -1707,43 +2131,47 @@ with col_right:
                             st.markdown(f'<div class="contract-name" style="margin-top: 8px;">{contract_name}</div>', unsafe_allow_html=True)
                         
                         with c3:
-                            if st.button("－", key=f"m_{state_key}", use_container_width=True):
-                                if is_toggle_type or current_val <= 0:
-                                    st.session_state[state_key] = -999 # なし
-                                else:
-                                    step = 1000 if current_val <= 10000 else 5000
-                                    new_val = max(0, current_val - step)
-                                    st.session_state[state_key] = -999 if new_val == 0 else new_val
-                                contract_info.benefit_amount_yen = st.session_state[state_key]
-                                st.rerun()
-                                
-                        with c4:
-                            if is_toggle_type or current_val == -999:
-                                display_text = "なし" if current_val == -999 else "付加"
-                                color = "#ff4b4b" if current_val == -999 else "#29A383"
-                                st.markdown(f'<div class="adj-value" style="text-align: center; margin-top: 6px; font-weight: bold; color: {color};">{display_text}</div>', unsafe_allow_html=True)
-                            else:
-                                new_val = st.number_input(
-                                    "Amount", 
-                                    value=current_val, 
-                                    key=f"in_{state_key}", 
-                                    label_visibility="collapsed", 
-                                    step=1000
-                                )
-                                if new_val != current_val:
-                                    st.session_state[state_key] = new_val
-                                    contract_info.benefit_amount_yen = new_val
-                                    st.rerun()
-                                    
-                        with c5:
-                            if st.button("＋", key=f"p_{state_key}", use_container_width=True):
+                            if is_toggle_type:
+                                # トグル形式
                                 if current_val == -999:
-                                    st.session_state[state_key] = st.session_state[orig_state_key]
-                                elif not is_toggle_type:
-                                    step = 1000 if current_val < 10000 else 5000
-                                    st.session_state[state_key] = current_val + step
-                                contract_info.benefit_amount_yen = st.session_state[state_key]
-                                st.rerun()
+                                    display_text = "なし"
+                                    btn_type = "secondary"
+                                else:
+                                    display_text = "付加"
+                                    btn_type = "primary"
+                                
+                                if st.button(
+                                    display_text, 
+                                    key=f"toggle_{state_key}", 
+                                    use_container_width=True, 
+                                    type=btn_type
+                                ):
+                                    if current_val == -999:
+                                        st.session_state[state_key] = 0
+                                    else:
+                                        st.session_state[state_key] = -999
+                                    st.rerun()
+                            else:
+                                # 数値型：ボタンクリックでテンキーダイアログを開く
+                                # 万円単位で表示
+                                display_text = format_yen_to_man(current_val)
+                                btn_type = "secondary" if current_val == -999 else "primary"
+                                
+                                if st.button(
+                                    display_text, 
+                                    key=f"val_btn_{state_key}", 
+                                    use_container_width=True,
+                                    type=btn_type
+                                ):
+                                    st.session_state.show_numpad_dialog = True
+                                    st.session_state.editing_state_key = state_key
+                                    st.session_state.editing_current_val = current_val if current_val != -999 else st.session_state[orig_state_key]
+                                    # 初期値をセット（千円単位の数値として）
+                                    if current_val != -999 and current_val > 0:
+                                        st.session_state.numpad_input = str(current_val // 1000)
+                                    else:
+                                        st.session_state.numpad_input = ""
+                                    st.rerun()
                                 
     else:
         st.button("全プラン詳細確認", key="special_contract_btn_disabled", use_container_width=True, disabled=True, help="ドラフトプランを作成すると利用可能になります")
@@ -1757,11 +2185,11 @@ with col_right:
 
 with col_chat:
     #st.title("AI チャットアシスタント")  #20260413修正
-    st.caption(f"選択中のお客様: **{persona_names[selected_idx]}**（{gender}-{age}才）")  #20240409 性別と年齢を追加
+    st.caption(f"選択中のお客さま: **{persona_names[selected_idx]}**（{gender}-{age}才）")  #20240409 性別と年齢を追加
     
     # 高さを指定してスクロール可能なチャットコンテナに変更 #20260410 李修正　
     # ここで高さを指定すると、この枠の中だけがスクロールするようになります
-    chat_container = st.container(height=500)  #20260410 李修正　チャット専用のスクロール領域
+    chat_container = st.container(height=750)  #20260410 李修正　チャット専用のスクロール領域
     
     with chat_container:
         # 最後のユーザーメッセージのインデックスを特定する #20260410 李修正　
@@ -1774,7 +2202,7 @@ with col_chat:
             with st.chat_message(message["role"]):
                 # 以前のスクロール用アンカーは不要となったため削除 #20260414_李修正
                 if message["content"] == "":
-                    st.markdown("*（プラン作成）*")
+                    st.markdown("*プラン作成*")
                 else:
                     st.markdown(message["content"])
         
@@ -1804,12 +2232,14 @@ with col_chat:
             # ★ 表示テキスト（改行あり）とAI送信用テキスト（改行なし）を分離
             # ★ 改行位置を調整して上下の文字数をバランス良く配置
             option_buttons = [
-                ("1", "プランについて\n説明してください", "プランについて説明してください", "plan_detail_start"),
-                ("2", "保障を手厚くする方針で\nプランを修正してください", "保障を手厚くする方針でプランを修正してください", "plan_modify_start"),
-                ("3", "保険料を下げる方針で\nプランを修正してください", "保険料を下げる方針でプランを修正してください", "plan_modify_start"),
-                ("4", "お客さまへ向けた提案\n文章を作成してください", "お客さまへ向けた提案文章を作成してください", "plan_propose_start"),
-                ("5", "保障内容について\n教えてください", "保障内容について教えてください", "plan_detail_start")
+                ("1", "「プラン説明」カテゴリー\nについて詳しく説明してください", "プランについて説明してください", "plan_detail_start"),
+                ("2", "「プラン修正」保障を手厚くする\n方針で修正してください", "保障を手厚くする方針でプランを修正してください", "plan_modify_start"),
+                ("3", "「プラン修正」保険料を下げる\n方針で修正してください", "保険料を下げる方針でプランを修正してください", "plan_modify_start"),
+                ("4", "「提案文作成」お客さま向けの\n提案文を作成してください", "お客さまへ向けた提案文章を作成してください", "plan_propose_start"),
+                ("5", "「プラン説明」プランの保障\n内容について詳しく説明ください", "保障内容について教えてください", "plan_detail_start")
             ]
+
+
             #修正_20260409_岡田
             
             # 最大文字数に基づいて列数を決定（AI送信用テキストで判定）
@@ -1961,8 +2391,8 @@ st.markdown("""
     [data-testid="stSidebarResizer"]{ width: 1px !important; background: #d0d7de !important; }
     /* #20260410 李修正　開閉ボタンの非表示設定を削除し、トグル可能に戻す */
     section[data-testid="stMain"]{ padding-left: 0.5rem !important; overflow: hidden !important; height: 100vh !important; }  #20260410 李修正　メインエリアを固定
-    section[data-testid="stMain"] .block-container{ padding-left: 10px !important; height: 100vh !important; overflow: hidden !important; padding-top: 70px !important; max-width: 100% !important; } #20260410 李修正　内部も固定し余白調整
-    [data-testid="stMainBlockContainer"] { padding-top: 70px !important; padding-left: 10px !important;} /* Streamlitの新バージョン用 */
+    section[data-testid="stMain"] .block-container{ padding-left: 10px !important; height: 100vh !important; overflow: hidden !important; padding-top: 70px !important;  padding-right: 20px !important; max-width: 100% !important; } #20260410 李修正　内部も固定し余白調整
+    [data-testid="stMainBlockContainer"] { padding-top: 70px !important; padding-left: 10px !important; padding-right: 20px !important;} /* Streamlitの新バージョン用 */
 
     /* ============================================================================== */
     /* 全局チャット吹き出し（気泡）スタイル上書き #20260414_李修正 */
@@ -1981,8 +2411,16 @@ st.markdown("""
     div[data-testid="stChatMessage"]:has(div[data-testid="stChatMessageAvatarUser"]),
     div[data-testid="stChatMessage"]:has(div[class*="user"]) {
         flex-direction: row-reverse !important; /* アバターを右に配置 */
+        max-width: fit-content !important;  /* ★追加：幅を内容に合わせる */
     }
     
+    /* ★追加：ユーザーメッセージの親コンテナを右寄せ */
+    div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stChatMessageAvatarUser"]) {
+        display: flex !important;
+        justify-content: flex-end !important;
+        width: 100% !important;
+    }
+
     /* ユーザーのテキスト吹き出し部分 */
     div[data-testid="stChatMessage"]:has(div[data-testid="stChatMessageAvatarUser"]) div[data-testid="stMarkdownContainer"],
     div[data-testid="stChatMessage"]:has(div[class*="user"]) div[data-testid="stMarkdownContainer"] {
@@ -2017,6 +2455,12 @@ st.markdown("""
         display: inline-block !important;
     }
     
+    div[data-testid="stChatMessage"] div[data-testid="stMarkdownContainer"] > *:last-child {
+        margin-bottom: 0 !important;
+        padding-bottom : 0 !important;
+        }
+
+
     /* アバター画像のサイズ調整 */
     div[data-testid="stChatMessageAvatarUser"],
     div[data-testid="stChatMessageAvatarAssistant"] {
